@@ -33,3 +33,17 @@ CREATE TABLE Monthly_Averages (
 );
 GO
 
+CREATE TABLE Weather_Conditions (
+    condition_id INT IDENTITY(1,1) PRIMARY KEY,
+    condition_name NVARCHAR(50) NOT NULL,
+    description NVARCHAR(255)
+);
+GO
+
+ALTER TABLE Weather_Data
+ADD condition_id INT;
+
+ALTER TABLE Weather_Data
+ADD CONSTRAINT FK_WeatherData_Condition
+FOREIGN KEY (condition_id) REFERENCES Weather_Conditions(condition_id);
+GO
