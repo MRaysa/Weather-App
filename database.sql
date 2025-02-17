@@ -22,3 +22,14 @@ CREATE TABLE Weather_Data (
     FOREIGN KEY (location_id) REFERENCES Locations(location_id)
 );
 GO
+
+CREATE TABLE Monthly_Averages (
+    average_id INT IDENTITY(1,1) PRIMARY KEY,
+    location_id INT,
+    month INT NOT NULL,
+    year INT NOT NULL,
+    average_temperature FLOAT NOT NULL,
+    FOREIGN KEY (location_id) REFERENCES Locations(location_id)
+);
+GO
+
