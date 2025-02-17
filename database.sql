@@ -12,3 +12,13 @@ CREATE TABLE Locations (
     longitude FLOAT
 );
 GO
+
+CREATE TABLE Weather_Data (
+    weather_id INT IDENTITY(1,1) PRIMARY KEY,
+    location_id INT,
+    temperature FLOAT NOT NULL,
+    humidity FLOAT NOT NULL,
+    timestamp DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (location_id) REFERENCES Locations(location_id)
+);
+GO
