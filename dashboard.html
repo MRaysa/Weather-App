@@ -127,7 +127,6 @@
     </section>
   </main>
 
-  <!-- JavaScript for Hamburger Toggle -->
   <script>
     const hamburger = document.getElementById('hamburger');
     const navLinks = document.getElementById('nav-links');
@@ -135,6 +134,28 @@
     hamburger.addEventListener('click', () => {
       navLinks.classList.toggle('active');
     });
+    document.addEventListener("DOMContentLoaded", () => {
+    fetchWeatherData(1);
+});
+
+function fetchWeatherData(locationId) {
+    fetch(`http://localhost/get_weather.php?location_id=${locationId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                console.error("Error:", data.error);
+            } else {
+                document.querySelector(".weather-details").innerHTML = `
+                    <p><strong>Location:</strong> ${data.city_name}</p>
+                    <p><strong>Temperature:</strong> ${data.temperature}°C</p>
+                    <p><strong>Humidity:</strong> ${data.humidity}%</p>
+                    <p><strong>Condition:</strong> ${data.condition_name || 'N/A'}</p>
+                `;
+            }
+        })
+        .catch(error => console.error("Fetch error:", error));
+}
+
   </script>
 </body>
 
