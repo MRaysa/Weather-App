@@ -135,3 +135,11 @@ searchButton.addEventListener("click", () => {
 
 // Initial Load (Default City: Dhaka, Bangladesh)
 fetchWeatherData("Dhaka");
+
+// Hamburger Menu Toggle
+const hamburger = document.getElementById("hamburger");
+const navLinks = document.getElementById("nav-links");
+
+hamburger.addEventListener("click", () => {
+  navLinks.classList.toggle("active");
+});
