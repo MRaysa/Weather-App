@@ -1,0 +1,132 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: url('images/weather-background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff; /* Changed text color to white for better contrast */
+}
+
+/* Navbar Styles */
+.navbar {
+    background: rgba(17, 10, 218, 0.4);
+    backdrop-filter: blur(10px);
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.navbar .logo img {
+    width: 60px;
+    height: auto;
+}
+
+/* Nav Links */
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #e0e3e7; /* Light text color */
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.nav-links a.active,
+.nav-links a:hover {
+    color: #ffcc00; /* Yellow on hover */
+}
+
+/* Weather Details Container */
+.weather-details-container {
+    background: rgba(17, 10, 218, 0.178);
+    border-radius: 12px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 800px;
+    margin: 2rem auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    text-align: center;
+}
+
+.weather-details-container h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #ffcc00; /* Yellow for heading */
+}
+
+.weather-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.weather-icon img {
+    width: 100px;
+    height: 100px;
+}
+
+.weather-details p {
+    font-size: 1.2rem;
+    color: #f0f0f0; /* Light gray for weather details */
+    margin: 0.5rem 0;
+}
+
+.weather-details p strong {
+    color: #ffcc00; /* Yellow for important details */
+}
+
+/* Button Style - Back to Home */
+.btn-primary {
+    background: #4299e1;
+    color: #fff;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+    display: inline-block;
+    margin-top: 2rem;
+}
+
+.btn-primary:hover {
+    background: #3182ce;
+    transform: translateY(-3px);
+}
+
+.btn-primary:active {
+    background: #2b6cb0;
+    transform: translateY(1px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .weather-info {
+        flex-direction: column;
+    }
+
+    .weather-icon img {
+        width: 80px;
+        height: 80px;
+    }
+}

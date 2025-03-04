@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Details - Weather App</title>
+    <link rel="stylesheet" href="detail.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="logo">
+                    <img src="images/weather-logo.png" alt="Weather App Logo">
+                </div>
+                <ul class="nav-links">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="#">Settings</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <div class="weather-details-container">
+                <h1 id="location-header">Loading...</h1>
+                <div class="weather-details">
+                    <div class="weather-icon">
+                        <img id="current-weather-icon" src="images/sunny.png" alt="Weather Icon">
+                    </div>
+                    <div id="detailed-weather-info">
+                        <!-- Weather info will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Back to Home Button -->
+                <button class="btn-primary" onclick="window.location.href='dashboard.html'">Back to Home</button>
+            </div>
+        </section>
+    </main>
+
+    <script src="detail.js"></script>
+</body>
+
+</html>
