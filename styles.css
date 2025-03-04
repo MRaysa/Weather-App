@@ -81,10 +81,15 @@
     font-size: 1rem;
     cursor: pointer;
     transition: background 0.3s ease;
+
+  }
+  #google-login{
+    margin-top: 1.5rem;
+    background: #0483fa;
   }
   
   .auth-button:hover {
-    background: #3182ce;
+    background: #0483fa;
   }
   
   .auth-footer {
