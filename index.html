@@ -22,14 +22,51 @@
               <input type="password" id="password" name="password" placeholder="Password" required>
             </div>
             <button type="submit" class="auth-button">Log In</button>
-            <button type="submit" class="auth-button">Login with Google</button>
+            <button type="button" id="google-login" class="auth-button">Login with Google</button>
           </form>
           <div class="auth-footer">
             <p><a href="forgot-password.html">Forgot Password?</a></p>
             <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
           </div>
         </div>
-      </div>
-      <script src="script.js"></script>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/11.4.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.4.0/firebase-auth-compat.js"></script>
+    
+
+    <script>
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyArHN20A_IwRsnX75Y-PYe6a_pUGhK_N_M",
+        authDomain: "weather-app-9418c.firebaseapp.com",
+        projectId: "weather-app-9418c",
+        storageBucket: "weather-app-9418c.firebasestorage.app",
+        messagingSenderId: "62155362827",
+        appId: "1:62155362827:web:7fe09503f13e15c290ed0e"
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+
+      // Handle Google Login
+      document.getElementById("google-login").addEventListener("click", () => {
+        const provider = new firebase.auth.GoogleAuthProvider();
+
+        auth.signInWithPopup(provider)
+          .then((result) => {
+            console.log("Google sign-in successful:", result.user);
+            alert(`Welcome, ${result.user.displayName}!`);
+            window.location.href = "dashboard.html"; // Redirect to home page
+          })
+          .catch((error) => {
+            console.error("Error:", error.message);
+            alert(error.message);
+          });
+      });
+    </script>
+    <script src="script.js"></script>
 </body>
 </html>
