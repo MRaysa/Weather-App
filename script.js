@@ -4,7 +4,14 @@ document.getElementById('login-form').addEventListener('submit', function (e) {
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
 
-  // Send login request to the backend
+  // Check for admin credentials
+  if (email === 'admin' && password === 'admin') {
+    // Redirect to admin panel
+    window.location.href = "admin.html"; // Redirect to the admin panel page
+    return; // Stop further execution
+  }
+
+  // Send login request to the backend for regular users
   fetch('login.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
