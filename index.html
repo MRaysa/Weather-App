@@ -28,6 +28,8 @@
             </div>
             <button type="submit" class="auth-button">Log In</button>
           </form>
+          <!-- Add the "Login as Guest" button -->
+          <button type="button" id="guest-login" class="auth-button guest-button">Login as Guest</button>
           <div class="auth-footer">
             <p><a href="forgot-password.html">Forgot Password?</a></p>
             <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
@@ -36,5 +38,37 @@
     </div>
 
     <script src="script.js"></script>
+    <script>
+      // Handle Guest Login
+      document.getElementById('guest-login').addEventListener('click', function () {
+        // Show a confirmation message
+        Swal.fire({
+          title: 'Login as Guest',
+          text: 'You are logging in as a guest. No data will be saved.',
+          icon: 'info',
+          confirmButtonText: 'Continue'
+        }).then(() => {
+          // Redirect to the dashboard or another page
+          window.location.href = 'dashboard.html'; // Replace with your desired page
+        });
+      });
+
+      // Handle Admin Login
+      document.getElementById('login-form').addEventListener('submit', function (e) {
+        e.preventDefault(); // Prevent form submission
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        // Check for admin credentials
+        if (email === 'admin' && password === 'admin') {
+          // Redirect to admin panel
+          window.location.href = 'admin-panel.html'; // Replace with your admin panel page
+        } else {
+          // Submit the form to the backend for regular users
+          this.submit();
+        }
+      });
+    </script>
 </body>
 </html>

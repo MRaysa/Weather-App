@@ -31,8 +31,8 @@
 }
 
 body {
-  font-family: 'Inter', sans-serif;
-  background: url('images/weather-background.jpg') no-repeat center center fixed;
+  font-family: "Inter", sans-serif;
+  background: url("images/weather-background.jpg") no-repeat center center fixed;
   background-size: cover;
   color: #333;
 }
@@ -87,6 +87,41 @@ body {
 }
 
 /* Navbar Right Section */
+/* Avatar Button */
+.avatar-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border: none;
+  background-color: transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.avatar-button:focus {
+  outline: 2px solid #4299e1; /* Focus ring */
+  outline-offset: 2px;
+}
+
+.avatar-button:hover {
+  background-color: rgba(0, 0, 0, 0.1); /* Ghost button hover effect */
+}
+
+/* Avatar Image */
+.avatar-image {
+  width: 40px; /* w-10 in Tailwind is 2.5rem or 40px */
+  height: 40px;
+  border-radius: 50%; /* Rounded full */
+  overflow: hidden; /* Ensure the image is clipped to the circle */
+}
+
+.avatar-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensure the image covers the circle */
+}
 .navbar-right {
   display: flex;
   align-items: center;
@@ -165,7 +200,11 @@ body {
 }
 
 .weather-card {
-  background: linear-gradient(135deg, rgba(226, 222, 234, 0.8), rgba(17, 10, 218, 0.4));
+  background: linear-gradient(
+    135deg,
+    rgba(226, 222, 234, 0.8),
+    rgba(17, 10, 218, 0.4)
+  );
   border-radius: 8px;
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -214,7 +253,11 @@ body {
   text-align: center;
   flex: 1 1 calc(20% - 1rem);
   padding: 1rem;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(17, 10, 218, 0.4));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.8),
+    rgba(17, 10, 218, 0.4)
+  );
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;

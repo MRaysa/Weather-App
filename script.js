@@ -1,6 +1,5 @@
-// Login Form Submission
 document.getElementById('login-form').addEventListener('submit', function (e) {
-  e.preventDefault();
+  e.preventDefault(); // Prevent form submission
 
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
@@ -14,18 +13,10 @@ document.getElementById('login-form').addEventListener('submit', function (e) {
   .then(response => response.json())
   .then(data => {
       if (data.status === 'success') {
-          // Show success message and redirect to dashboard
-          Swal.fire({
-              title: 'Success!',
-              text: data.message,
-              icon: 'success',
-              confirmButtonText: 'Continue'
-          }).then(() => {
-              // Redirect to dashboard.html
-              window.location.href = 'dashboard.html';
-          });
+          // Redirect based on the response
+          window.location.href = data.redirect;
       } else {
-          // Show error message if login fails
+          // Show error message
           Swal.fire({
               title: 'Error!',
               text: data.message,
