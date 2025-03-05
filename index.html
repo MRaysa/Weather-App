@@ -3,40 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile Management</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="./styles.css">
+    <title>Weather-App</title>
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.all.min.js"></script>
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.min.css">
 </head>
 <body>
-
-    <div class="container">
-        <h2>User Profile</h2>
-
-        <!-- Profile Picture -->
-        <div class="profile-pic-container">
-            <img id="profilePic" src="default-avatar.png" alt="Profile Picture">
-            <input type="file" id="profilePicInput" accept="image/*">
-            <button onclick="uploadProfilePicture()">Upload</button>
+    <div class="auth-container">
+        <div class="auth-card">
+          <div class="auth-header">
+            <img src="weather-logo.png" alt="Weather App Logo" class="logo">
+            <h1>Welcome Back!</h1>
+            <p>Sign in to check the weather in your area.</p>
+          </div>
+          <form id="login-form" action="login.php" method="POST">
+            <div class="input-group">
+              <input id="email" name="email" placeholder="Email" required>
+            </div>
+            <div class="input-group">
+              <input type="password" id="password" name="password" placeholder="Password" required>
+            </div>
+            <button type="submit" class="auth-button">Log In</button>
+          </form>
+          <!-- Add the "Login as Guest" button -->
+          <button type="button" id="guest-login" class="auth-button guest-button">Login as Guest</button>
+          <div class="auth-footer">
+            <p><a href="forgot-password.html">Forgot Password?</a></p>
+            <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+          </div>
         </div>
-
-        <!-- Profile Information -->
-        <label>Name:</label>
-        <input type="text" id="userName" placeholder="Enter your name">
-
-        <label>Email:</label>
-        <input type="email" id="userEmail" disabled>
-
-        <button onclick="updateUserProfile()">Save Changes</button>
-
-        <!-- Change Password -->
-        <h3>Change Password</h3>
-        <input type="password" id="newPassword" placeholder="New Password">
-        <button onclick="changePassword()">Change Password</button>
-
-        <!-- Delete Account -->
-        <h3>Delete Account</h3>
-        <button class="delete-btn" onclick="deleteAccount()">Delete Account</button>
     </div>
 
     <script src="script.js"></script>
+    <script>
+      // Handle Guest Login
+      document.getElementById('guest-login').addEventListener('click', function () {
+        // Show a confirmation message
+        Swal.fire({
+          title: 'Login as Guest',
+          text: 'You are logging in as a guest. No data will be saved.',
+          icon: 'info',
+          confirmButtonText: 'Continue'
+        }).then(() => {
+          // Redirect to the dashboard or another page
+          window.location.href = 'dashboard.html'; // Replace with your desired page
+        });
+      });
+
+      // Handle Admin Login
+      document.getElementById('login-form').addEventListener('submit', function (e) {
+        e.preventDefault(); // Prevent form submission
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        // Check for admin credentials
+        if (email === 'admin' && password === 'admin') {
+          // Redirect to admin panel
+          window.location.href = 'admin.html'; // Replace with your admin panel page
+        } else {
+          // Submit the form to the backend for regular users
+          this.submit();
+        }
+      });
+    </script>
 </body>
 </html>
