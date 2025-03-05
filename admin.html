@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Weather App</title>
+    <!-- Google Font Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+    <!-- Admin Panel Header -->
+    <header class="header">
+        <h1>Admin Panel</h1>
+        <!-- Logout Button -->
+        <button id="logout-button" class="logout-button">Logout</button>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="table-container">
+            <h2>User Data</h2>
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Default Location</th>
+                        <th>Saved Locations</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="user-table-body">
+                    <!-- Rows will be dynamically populated here -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- JavaScript to Populate Table, Handle Remove, and Logout -->
+    <script src="./admin.js">    </script>
+</body>
+
+</html>
