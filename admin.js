@@ -1,16 +1,16 @@
 let users = [
   {
-    userId: 1,
+    email: "user1@example.com",
     defaultLocation: "Dhaka, Bangladesh",
     savedLocations: ["New York, USA", "London, UK"],
   },
   {
-    userId: 2,
+    email: "user2@example.com",
     defaultLocation: "New York, USA",
     savedLocations: ["Paris, France", "Tokyo, Japan"],
   },
   {
-    userId: 3,
+    email: "user3@example.com",
     defaultLocation: "London, UK",
     savedLocations: ["Sydney, Australia", "Berlin, Germany"],
   },
@@ -23,9 +23,10 @@ function populateTable() {
 
   users.forEach((user, index) => {
     const row = document.createElement("tr");
-    const userIdCell = document.createElement("td");
-    userIdCell.textContent = user.userId;
-    row.appendChild(userIdCell);
+
+    const userEmailCell = document.createElement("td");
+    userEmailCell.textContent = user.email;
+    row.appendChild(userEmailCell);
 
     const defaultLocationCell = document.createElement("td");
     defaultLocationCell.textContent = user.defaultLocation;
