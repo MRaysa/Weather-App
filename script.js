@@ -5,6 +5,7 @@ document.getElementById('login-form').addEventListener('submit', function (e) {
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
 
+  // Send login request to the backend
   fetch('login.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -13,15 +14,18 @@ document.getElementById('login-form').addEventListener('submit', function (e) {
   .then(response => response.json())
   .then(data => {
       if (data.status === 'success') {
+          // Show success message and redirect to dashboard
           Swal.fire({
               title: 'Success!',
               text: data.message,
               icon: 'success',
               confirmButtonText: 'Continue'
           }).then(() => {
+              // Redirect to dashboard.html
               window.location.href = 'dashboard.html';
           });
       } else {
+          // Show error message if login fails
           Swal.fire({
               title: 'Error!',
               text: data.message,
@@ -30,9 +34,16 @@ document.getElementById('login-form').addEventListener('submit', function (e) {
           });
       }
   })
-  .catch(error => console.error('Error:', error));
+  .catch(error => {
+      console.error('Error:', error);
+      Swal.fire({
+          title: 'Error!',
+          text: 'An error occurred. Please try again.',
+          icon: 'error',
+          confirmButtonText: 'Try Again'
+      });
+  });
 });
- 
   // Forgot Password Form Submission
   document.getElementById('forgot-password-form').addEventListener('submit', function (e) {
     e.preventDefault();
