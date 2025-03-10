@@ -20,9 +20,9 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: weather_db
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: weather_app
+      MYSQL_USER: root
+      MYSQL_PASSWORD: zara
     ports:
       - "3306:3306"
     volumes:

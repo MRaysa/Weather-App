@@ -1,8 +1,8 @@
 <?php
-$host = 'localhost'; // Database host
-$dbname = 'weather_app'; // Database name
-$username = 'root'; // Database username
-$password = 'zara'; // Database password
+$host = 'db'; // Docker service name for the database
+$dbname = 'weather_app';
+$username = 'root';
+$password = 'zara';
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
