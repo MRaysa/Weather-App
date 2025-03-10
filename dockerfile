@@ -1,9 +1,13 @@
 FROM php:8.2-apache
 
 # Install necessary packages
-RUN apt-get update && apt-get install -y \
-    libapache2-mod-php \
-    && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && apt-get install -y \
+#     software-properties-common \
+#     && add-apt-repository ppa:ondrej/php -y \
+#     && apt-get update && apt-get install -y libapache2-mod-php \
+#     && rm -rf /var/lib/apt/lists/*
+
+    
 
 # Set ServerName to suppress the warning
 RUN echo "ServerName localhost" | tee -a /etc/apache2/apache2.conf
