@@ -7,6 +7,52 @@
     <link rel="stylesheet" href="profile.css">
     <link rel="stylesheet" href="dashboard.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- SweetAlert -->
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        
+        // Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyArHN20A_IwRsnX75Y-PYe6a_pUGhK_N_M",
+            authDomain: "weather-app-9418c.firebaseapp.com",
+            projectId: "weather-app-9418c",
+            storageBucket: "weather-app-9418c.firebasestorage.app",
+            messagingSenderId: "62155362827",
+            appId: "1:62155362827:web:7fe09503f13e15c290ed0e"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Check user authentication state
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in
+                const userName = user.displayName || "Guest";  // Default to 'Guest' if no display name
+                const userEmail = user.email || "No email found";
+                document.getElementById('userName').textContent = userName;
+                document.getElementById('userEmail').textContent = userEmail;
+
+                // Debugging the photoURL
+                console.log("User photoURL: ", user.photoURL);
+
+                // Update the profile image with Gmail photoURL if available
+                if (user.photoURL) {
+                    document.querySelector('#profilePic').src = user.photoURL;  // Set Gmail profile image
+                    document.querySelector('.avatar-image img').src = user.photoURL; // Navbar image update too
+                } else {
+                    // Use fallback image if photoURL is not available
+                    console.log("No photoURL available, using fallback image.");
+                }
+            } else {
+                // No user is signed in
+                window.location.href = 'index.html';  // Redirect to login page if no user is signed in
+            }
+        });
+    </script>
 </head>
 <body>
 
@@ -30,8 +76,7 @@
                 <div class="avatar-button">
                     <div class="avatar-image">
                         <a href="./profile.html">
-                            <img alt="User Avatar" 
-                                 src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                            <img alt="User Avatar" id="navbarProfilePic" src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
                         </a>
                     </div>
                 </div>
@@ -46,8 +91,7 @@
         <!-- Profile Picture -->
         <div>
             <a href="./profile.html">
-                <img alt="User Avatar" 
-                     src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                <img alt="User Avatar" id="profilePic" src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
             </a>
             <!-- Adding profile picture upload option -->
             <input type="file" id="uploadPic" class="btn-upload" accept="image/*" onchange="updateProfilePic()">
