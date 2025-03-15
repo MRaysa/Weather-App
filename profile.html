@@ -3,40 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile Management</title>
+    <title>User Profile</title>
     <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- SweetAlert -->
 </head>
 <body>
 
-    <div class="container">
-        <h2>User Profile</h2>
+    <!-- Navbar -->
+    <header>
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="logo">
+                    <img src="images/weather-logo.png" alt="Weather App Logo">
+                </div>
+                <!-- Mobile Navbar Toggle -->
+                <div class="mobile-menu-icon" onclick="toggleMenu()">
+                    <span>&#9776;</span> <!-- Hamburger icon -->
+                </div>
+                <ul class="nav-links">
+                    <li><a href="dashboard.html">Home</a></li>
+                    <li><a href="average.html">Average</a></li>
+                    <li><a href="#">Locations</a></li>
+                    <li><a href="index.html">Logout</a></li>
+                </ul>
+                <div class="avatar-button">
+                    <div class="avatar-image">
+                        <a href="./profile.html">
+                            <img alt="User Avatar" 
+                                 src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Profile Section -->
+    <div class="profile-container">
+        <h2>My Profile</h2>
 
         <!-- Profile Picture -->
-        <div class="profile-pic-container">
-            <img id="profilePic" src="default-avatar.png" alt="Profile Picture">
-            <input type="file" id="profilePicInput" accept="image/*">
-            <button onclick="uploadProfilePicture()">Upload</button>
+        <div>
+            <a href="./profile.html">
+                <img alt="User Avatar" 
+                     src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+            </a>
+            <!-- Adding profile picture upload option -->
+            <input type="file" id="uploadPic" class="btn-upload" accept="image/*" onchange="updateProfilePic()">
         </div>
 
         <!-- Profile Information -->
-        <label>Name:</label>
-        <input type="text" id="userName" placeholder="Enter your name">
+        <div class="profile-info">
+            <p><strong>Name:</strong> <span id="userName">John Doe</span></p>
+            <p><strong>Email:</strong> <span id="userEmail">johndoe@example.com</span></p>
+            <p><strong>Contact:</strong> <span id="userContact">+1234567890</span></p>
+        </div>
 
-        <label>Email:</label>
-        <input type="email" id="userEmail" disabled>
-
-        <button onclick="updateUserProfile()">Save Changes</button>
-
-        <!-- Change Password -->
-        <h3>Change Password</h3>
-        <input type="password" id="newPassword" placeholder="New Password">
-        <button onclick="changePassword()">Change Password</button>
-
-        <!-- Delete Account -->
-        <h3>Delete Account</h3>
-        <button class="delete-btn" onclick="deleteAccount()">Delete Account</button>
+        <!-- Action Buttons -->
+        <div class="profile-actions">
+            <button class="btn-edit" onclick="editProfile()">Edit Profile</button>
+            <button class="btn-primary" onclick="editPassword()">Edit Password</button>
+            <button class="btn-delete" onclick="deleteAccount()">Delete Account</button>
+        </div>
     </div>
 
-    <script src="profile.js"></script>
+    <script>
+        // Function to simulate profile picture update
+        function updateProfilePic() {
+            const fileInput = document.getElementById('uploadPic');
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profilePic').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Edit Profile button function - Popup for profile update
+        function editProfile() {
+            Swal.fire({
+                title: 'Edit Profile',
+                html: `
+                    <input type="text" id="name" class="swal2-input" placeholder="Enter your name" value="John Doe">
+                    <input type="email" id="email" class="swal2-input" placeholder="Enter your email" value="johndoe@example.com">
+                    <input type="text" id="contact" class="swal2-input" placeholder="Enter your contact" value="+1234567890">
+                `,
+                confirmButtonText: 'Save',
+                showCancelButton: true,
+                preConfirm: () => {
+                    const name = document.getElementById('name').value;
+                    const email = document.getElementById('email').value;
+                    const contact = document.getElementById('contact').value;
+                    // Here, you can add logic to save the data to the server or update the UI
+                    document.getElementById('userName').textContent = name;
+                    document.getElementById('userEmail').textContent = email;
+                    document.getElementById('userContact').textContent = contact;
+                }
+            });
+        }
+
+        // Edit Password button function - Popup for password update
+        function editPassword() {
+            Swal.fire({
+                title: 'Edit Password',
+                html: `
+                    <input type="password" id="currentPassword" class="swal2-input" placeholder="Current Password">
+                    <input type="password" id="newPassword" class="swal2-input" placeholder="New Password">
+                    <input type="password" id="confirmPassword" class="swal2-input" placeholder="Confirm New Password">
+                `,
+                confirmButtonText: 'Save',
+                showCancelButton: true,
+                preConfirm: () => {
+                    const currentPassword = document.getElementById('currentPassword').value;
+                    const newPassword = document.getElementById('newPassword').value;
+                    const confirmPassword = document.getElementById('confirmPassword').value;
+                    if (newPassword !== confirmPassword) {
+                        Swal.showValidationMessage('Passwords do not match');
+                    } else {
+                        // Here, you can add logic to change the password
+                        console.log('Password changed');
+                    }
+                }
+            });
+        }
+
+        // Delete Account functionality with SweetAlert
+        function deleteAccount() {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to recover this account!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire("Deleted!", "Your account has been deleted.", "success");
+                    // Perform account deletion logic here
+                }
+            });
+        }
+
+        // Toggle the mobile menu visibility
+        function toggleMenu() {
+            const navLinks = document.querySelector(".nav-links");
+            navLinks.classList.toggle("active");
+        }
+    </script>
+
 </body>
 </html>
