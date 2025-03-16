@@ -1,4 +1,4 @@
-const API_KEY = "fb20f470da204f46b2495101252802"; // WeatherAPI.com API key
+const API_KEY = "1dec1896e77e4da5b0c195326251603"; // WeatherAPI.com API key
 const BASE_URL = "https://api.weatherapi.com/v1";
 
 // DOM Elements
@@ -25,7 +25,9 @@ const fetchWeatherData = async (location, days) => {
 
 // Function to process monthly data
 const processMonthlyData = (forecastData) => {
-  const monthlyTemperatures = forecastData.forecast.forecastday.map((day) => day.day.avgtemp_c);
+  const monthlyTemperatures = forecastData.forecast.forecastday.map(
+    (day) => day.day.avgtemp_c
+  );
   const labels = forecastData.forecast.forecastday.map((day) => day.date);
   return { temperatures: monthlyTemperatures, labels };
 };
@@ -33,7 +35,20 @@ const processMonthlyData = (forecastData) => {
 // Function to process yearly data (mock data for demonstration)
 const processYearlyData = () => {
   const yearlyTemperatures = [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]; // Example yearly data
-  const labels = ["Year 1", "Year 2", "Year 3", "Year 4", "Year 5", "Year 6", "Year 7", "Year 8", "Year 9", "Year 10", "Year 11", "Year 12"];
+  const labels = [
+    "Year 1",
+    "Year 2",
+    "Year 3",
+    "Year 4",
+    "Year 5",
+    "Year 6",
+    "Year 7",
+    "Year 8",
+    "Year 9",
+    "Year 10",
+    "Year 11",
+    "Year 12",
+  ];
   return { temperatures: yearlyTemperatures, labels };
 };
 
