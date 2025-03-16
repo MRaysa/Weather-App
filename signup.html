@@ -14,7 +14,7 @@
         <h1>Create an Account</h1>
         <p>Sign up to get started with the Weather App.</p>
       </div>
-      <form id="signup-form" action="/api-signup.js" method="POST">
+      <form id="signup-form">
         <div class="input-group">
           <input type="text" id="fullname" name="fullname" placeholder="Full Name" required>
         </div>
@@ -34,7 +34,41 @@
       </div>
     </div>
   </div>
-  <script src="script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script>
+    // Initialize Supabase
+    const supabaseUrl = 'https://lkirjepcrvbzctuwdqma.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxraXJqZXBjcnZiemN0dXdkcW1hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIxMDUzNjgsImV4cCI6MjA1NzY4MTM2OH0.ygiGNGJyL19mmp3SIKZ96ZNKgF9nS6dc4VwtsGsqKyk';
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+    // Handle form submission
+    document.getElementById('signup-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const fullName = document.getElementById('fullname').value;
+      const email = document.getElementById('signup-email').value;
+      const password = document.getElementById('signup-password').value;
+      const defaultLocation = document.getElementById('default_location').value;
+
+      // Sign up with Supabase
+      const { user, error } = await supabase.auth.signUp({ email, password });
+
+      if (error) {
+        alert('Signup failed: ' + error.message);
+      } else {
+        // Save additional user data to the profiles table
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .insert([{ id: user.id, name: fullName, email, default_location: defaultLocation }]);
+
+        if (profileError) {
+          console.error('Error saving profile:', profileError);
+        } else {
+          alert('Signup successful!');
+          window.location.href = '/dashboard.html';
+        }
+      }
+    });
+  </script>
 </body>
 </html>
