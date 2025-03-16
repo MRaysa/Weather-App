@@ -12,51 +12,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.min.css">
 
     <!-- Firebase Modular SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyArHN20A_IwRsnX75Y-PYe6a_pUGhK_N_M",
-            authDomain: "weather-app-9418c.firebaseapp.com",
-            projectId: "weather-app-9418c",
-            storageBucket: "weather-app-9418c.firebasestorage.app",
-            messagingSenderId: "62155362827",
-            appId: "1:62155362827:web:7fe09503f13e15c290ed0e"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        document.addEventListener("DOMContentLoaded", function() {
-            // Handle Google Login
-            document.getElementById("google-login")?.addEventListener("click", () => {
-                const provider = new GoogleAuthProvider();
-
-                signInWithPopup(auth, provider)
-                    .then((result) => {
-                        console.log("Google sign-in successful:", result.user);
-                        Swal.fire({
-                            title: 'Success!',
-                            text: `Welcome, ${result.user.displayName}!`,
-                            icon: 'success',
-                            confirmButtonText: 'Continue'
-                        }).then(() => {
-                            window.location.href = "dashboard.html";
-                        });
-                    })
-                    .catch((error) => {
-                        console.error("Error:", error.message);
-                        Swal.fire({
-                            title: 'Error!',
-                            text: error.message,
-                            icon: 'error',
-                            confirmButtonText: 'Try Again'
-                        });
-                    });
-            });
-        });
-    </script>
 </head>
 <body>
     <div class="auth-container">
@@ -76,9 +31,6 @@
                 <button type="submit" class="auth-button">Log In</button>
             </form>
 
-            <!-- Google Login Button -->
-            <button type="button" id="google-login" class="auth-button">Login with Google</button>
-
             <!-- Add the "Login as Guest" button -->
             <button type="button" id="guest-login" class="auth-button guest-button">Login as Guest</button>
 
@@ -88,41 +40,7 @@
             </div>
         </div>
     </div>
-
-    <script src="script.js"></script>
-    <script>
-        // Handle Guest Login
-        document.getElementById('guest-login').addEventListener('click', function () {
-            // Show a confirmation message
-            Swal.fire({
-                title: 'Login as Guest',
-                text: 'You are logging in as a guest. No data will be saved.',
-                icon: 'info',
-                confirmButtonText: 'Continue'
-            }).then(() => {
-                // Redirect to the dashboard or another page
-                window.location.href = 'dashboard.html'; // Replace with your desired page
-            });
-        });
-
-        // Handle Admin Login
-        document.getElementById('login-form').addEventListener('submit', function (e) {
-            e.preventDefault(); // Prevent form submission
-
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            // Check for admin credentials
-            if (email === 'admin' && password === 'admin') {
-                // Redirect to admin panel
-                window.location.href = 'admin.html'; // Replace with your admin panel page
-            } else {
-                // Submit the form to the backend for regular users
-                this.submit();
-            }
-        });
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
+    <script src="./script.js"></script>
 </body>
 </html>
