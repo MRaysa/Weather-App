@@ -1,3 +1,4 @@
+import supabase from './supabase.js';
 const API_KEY = "fb20f470da204f46b2495101252802"; //  WeatherAPI.com API key connect
 const BASE_URL = "https://api.weatherapi.com/v1";
 
@@ -151,3 +152,47 @@ const navLinks = document.getElementById("nav-links");
 hamburger.addEventListener("click", () => {
   navLinks.classList.toggle("active");
 });
+
+// Save default location to Supabase
+async function saveDefaultLocation(city) {
+  const user = supabase.auth.user();
+  if (user) {
+    const { error } = await supabase
+      .from('profiles')
+      .update({ default_location: city })
+      .eq('id', user.id);
+
+    if (error) {
+      console.error('Error saving default location:', error);
+    }
+  }
+}
+
+// Initial Load (Default City: Fetch from Supabase)
+async function initializeDashboard() {
+  const user = supabase.auth.user();
+  if (user) {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('default_location')
+      .eq('id', user.id)
+      .single();
+
+    if (error) {
+      console.error('Error fetching default location:', error);
+    } else {
+      fetchWeatherData(data.default_location || 'Dhaka');
+    }
+  }
+}
+
+searchButton.addEventListener('click', () => {
+  const city = searchInput.value.trim();
+  if (city) {
+    fetchWeatherData(city);
+    saveDefaultLocation(city);
+  }
+});
+
+// Initialize dashboard on page load
+initializeDashboard();

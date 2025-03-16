@@ -1,19 +1,17 @@
-FROM php:8.2.27-apache
+# Use the official Node.js image
+FROM node:18-alpine
 
-# Install necessary extensions for MySQL
-RUN docker-php-ext-install pdo pdo_mysql mysqli
+# Install http-server globally
+RUN npm install -g http-server
 
-# Set ServerName to suppress warnings
-RUN echo "ServerName localhost" | tee -a /etc/apache2/apache2.conf
+# Set the working directory
+WORKDIR /app
 
-# Copy application files
-COPY . /var/www/html/
+# Copy your static files (HTML, CSS, JS)
+COPY . .
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html
+# Expose port 8080
+EXPOSE 8080
 
-# Enable required Apache modules
-RUN a2enmod rewrite
-
-# Restart Apache (this is handled by CMD)
-CMD ["apache2-foreground"]
+# Start the HTTP server
+CMD ["http-server", "-p", "8080"]

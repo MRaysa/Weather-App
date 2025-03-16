@@ -9,44 +9,11 @@ services:
       - "8000:80"
     volumes:
       - .:/var/www/html # Mount your local project files into the container
-    depends_on:
-      - mysql
-    networks:
-      - app_network
-
-  mysql:
-    image: mysql:8.0
-    container_name: mysql_container
-    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: weather_app
-      MYSQL_USER: root
-      MYSQL_PASSWORD: zara
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    networks:
-      - app_network
-
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    container_name: phpmyadmin_container
-    restart: always
-    ports:
-      - "8080:80"
-    environment:
-      PMA_HOST: mysql
-      PMA_USER: root
-      PMA_PASSWORD: root
-    depends_on:
-      - mysql
+      SUPABASE_URL: https://lkirjepcrvbzctuwdqma.supabase.co
+      SUPABASE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxraXJqZXBjcnZiemN0dXdkcW1hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIxMDUzNjgsImV4cCI6MjA1NzY4MTM2OH0.ygiGNGJyL19mmp3SIKZ96ZNKgF9nS6dc4VwtsGsqKyk
     networks:
       - app_network
 
 networks:
   app_network:
-
-volumes:
-  mysql_data:
