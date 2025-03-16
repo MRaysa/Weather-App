@@ -35,42 +35,6 @@
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-  <script>
-    // Initialize Supabase
-    const supabaseUrl = 'https://lkirjepcrvbzctuwdqma.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
-    // Handle form submission
-    document.getElementById('signup-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const fullName = document.getElementById('fullname').value;
-      const email = document.getElementById('signup-email').value;
-      const password = document.getElementById('signup-password').value;
-      const defaultLocation = document.getElementById('default_location').value;
-
-      // Sign up with Supabase
-      const { user, error } = await supabase.auth.signUp({ email, password });
-
-      if (error) {
-        console.error('Signup error:', error);
-        alert('Signup failed: ' + error.message);
-      } else {
-        // Save additional user data to the profiles table
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .insert([{ id: user.id, name: fullName, email, default_location: defaultLocation }]);
-
-        if (profileError) {
-          console.error('Profile error:', profileError);
-          alert('Error saving profile: ' + profileError.message);
-        } else {
-          alert('Signup successful!');
-          window.location.href = './dashboard.html';
-        }
-      }
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
