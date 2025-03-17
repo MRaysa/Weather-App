@@ -7,6 +7,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
+      // Check for admin credentials
+      if (email === "admin" && password === "admin") {
+        // Redirect to admin.html
+        window.location.href = "admin.html";
+        return; // Stop further execution
+      }
+
       // Send login request to the backend
       try {
         const response = await fetch("http://localhost:5502/login", {

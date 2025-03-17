@@ -14,6 +14,17 @@ app.use(cors());
 // File path for storing user data
 const usersFilePath = path.join(__dirname, "users.txt");
 
+// Endpoint to fetch user data
+app.get("/users", (req, res) => {
+  if (!fs.existsSync(usersFilePath)) {
+    return res.status(404).json({ message: "User data not found" });
+  }
+
+  const data = fs.readFileSync(usersFilePath, "utf8");
+  const users = JSON.parse(data);
+  res.status(200).json(users);
+});
+
 // Helper function to read users from the file
 const readUsers = () => {
   if (!fs.existsSync(usersFilePath)) {
