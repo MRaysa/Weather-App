@@ -1,6 +1,5 @@
-const API_KEY = "fb20f470da204f46b2495101252802"; // Your WeatherAPI.com key
+const API_KEY = "1dec1896e77e4da5b0c195326251603"; // WeatherAPI.com API key
 const BASE_URL = "https://api.weatherapi.com/v1";
-
 // Get city from URL query parameter
 const urlParams = new URLSearchParams(window.location.search);
 const city = urlParams.get('city');

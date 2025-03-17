@@ -105,7 +105,13 @@ function updateCurrentWeather(data) {
         <p><strong>Temperature:</strong> ${current.temp_c}°C</p>
         <p><strong>Humidity:</strong> ${current.humidity}%</p>
         <p><strong>Condition:</strong> ${current.condition.text}</p>
-    `;
+        <button class="btn-primary" onclick="viewDetails('${location.name}')">View Details</button>
+   `;
+   
+ }
+ function viewDetails(city) {
+   // Navigate to the detail page with the city name as a query parameter
+   window.location.href = `details.html?city=${encodeURIComponent(city)}`;
 }
 
 // Update 5-Day Forecast
