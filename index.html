@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,9 +13,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.min.css">
 
     <!-- Firebase Modular SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
-     <!-- Firebase Modular SDK -->
-     <script type="module">
+
+    <!-- Firebase Modular SDK -->
+    <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
@@ -30,7 +34,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             // Handle Google Login
             document.getElementById("google-login")?.addEventListener("click", () => {
                 const provider = new GoogleAuthProvider();
@@ -60,6 +64,7 @@
         });
     </script>
 </head>
+
 <body>
     <div class="auth-container">
         <div class="auth-card">
@@ -79,7 +84,8 @@
             </form>
             <button type="button" id="google-login" class="auth-button">Login with Google</button>
             <!-- Add the "Login as Guest" button -->
-            <a href="./guest_dashboard.html"><button type="button" id="guest-login" class="auth-button guest-button">Login as Guest</button></a>
+            <a href="./guest_dashboard.html"><button type="button" id="guest-login"
+                    class="auth-button guest-button">Login as Guest</button></a>
 
             <div class="auth-footer">
                 <p><a href="forgot-password.html">Forgot Password?</a></p>
@@ -87,7 +93,9 @@
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-    <script type="module" src="script.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script> -->
+    <!-- <script type="module" src="script.js"></script> -->
+    <script src="./login.js"></script>
 </body>
+
 </html>

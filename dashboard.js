@@ -73,7 +73,7 @@ async function fetchWeatherData(city) {
     );
     const currentData = await currentResponse.json();
 
-    // Fetch 5-day forecast
+    // Fetch 3-day forecast
     const forecastResponse = await fetch(
       `${BASE_URL}/forecast.json?key=${API_KEY}&q=${city}&days=5`
     );
@@ -107,11 +107,10 @@ function updateCurrentWeather(data) {
         <p><strong>Condition:</strong> ${current.condition.text}</p>
         <button class="btn-primary" onclick="viewDetails('${location.name}')">View Details</button>
    `;
-   
- }
- function viewDetails(city) {
-   // Navigate to the detail page with the city name as a query parameter
-   window.location.href = `details.html?city=${encodeURIComponent(city)}`;
+}
+function viewDetails(city) {
+  // Navigate to the detail page with the city name as a query parameter
+  window.location.href = `details.html?city=${encodeURIComponent(city)}`;
 }
 
 // Update 5-Day Forecast
