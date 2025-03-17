@@ -1,4 +1,31 @@
 // Fetch users from the backend
+let users = [
+  {
+    email: "zaararahman242@gmail.com",
+    defaultLocation: "Dhaka, Bangladesh",
+    savedLocations: ["New York, USA", "London, UK"],
+  },
+  {
+    email: "kims75587@gmail.com",
+    defaultLocation: "Dhaka",
+    savedLocations: ["Paris, France", "Tokyo, Japan"],
+  },
+  {
+    email: "2220281@iub.edu.bd",
+    defaultLocation: "London, UK",
+    savedLocations: ["Sydney, Australia", "Berlin, Germany"],
+  },
+  {
+    email: "2110827@iub.edu.bd",
+    defaultLocation: "Canada",
+    savedLocations: ["Sydney, Australia", "Berlin, Germany"],
+  },
+  {
+    email: "2110253@iub.edu.bd",
+    defaultLocation: "Japan",
+    savedLocations: ["Sydney, Australia", "Berlin, Germany"],
+  },
+];
 async function fetchUsers() {
   try {
     const response = await fetch("http://localhost:5502/users");
