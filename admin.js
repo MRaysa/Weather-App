@@ -1,4 +1,3 @@
-// Fetch users from the backend
 let users = [
   {
     email: "zaararahman242@gmail.com",
