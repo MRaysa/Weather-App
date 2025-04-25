@@ -1,100 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign Up</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-
-</head>
-
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Weather App | signup</title>
+        <link rel="stylesheet" href="css/auth.css">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+      </head>
 <body>
   <div class="auth-container">
     <div class="auth-card">
-      <div class="auth-header">
-        <img src="weather-logo.png" alt="Weather App Logo" class="logo">
-        <h1>Create an Account</h1>
-        <p>Sign up to get started with the Weather App.</p>
+      <div class="logo">
+        <img src="weather-logo.png" alt="Weather App">
+        <h1>Create Account</h1>
       </div>
-      <form id="signup-form">
+      
+      <form id="signupForm" class="auth-form">
         <div class="input-group">
-          <input type="text" id="fullname" name="fullname" placeholder="Full Name" required>
+          <input type="text" id="fullName" required>
+          <label for="fullName">Full Name</label>
+          <span class="focus-border"></span>
         </div>
+        
         <div class="input-group">
-          <input type="email" id="signup-email" name="email" placeholder="Email" required>
+          <input type="email" id="email" required>
+          <label for="email">Email</label>
+          <span class="focus-border"></span>
         </div>
+        
         <div class="input-group">
-          <input type="text" id="default_location" name="default_location" placeholder="Enter your default location"
-            required>
+          <input type="text" id="location" required>
+          <label for="location">Default Location</label>
+          <span class="focus-border"></span>
         </div>
+        
         <div class="input-group">
-          <input type="password" id="signup-password" name="password" placeholder="Password" required>
+          <input type="password" id="password" required>
+          <label for="password">Password</label>
+          <span class="focus-border"></span>
         </div>
-        <button type="submit" class="auth-button">Sign Up</button>
+        
+        <button type="submit" class="btn-primary">
+          <span>Sign Up</span>
+          <svg viewBox="0 0 24 24">
+            <path d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"></path>
+          </svg>
+        </button>
       </form>
+      
       <div class="auth-footer">
-        <p>Already have an account? <a href="index.html">Log In</a></p>
+        <p>Already have an account? <a href="index.html" class="text-link">Log in</a></p>
       </div>
     </div>
   </div>
-  <!-- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script> -->
-  <!-- <script type="module" src="./script.js"></script> -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const signupForm = document.getElementById('signup-form');
-      if (signupForm) {
-        signupForm.addEventListener('submit', async (e) => {
-          e.preventDefault();
 
-          const fullName = document.getElementById('fullname').value;
-          const email = document.getElementById('signup-email').value;
-          const password = document.getElementById('signup-password').value;
-          const defaultLocation = document.getElementById('default_location').value;
-
-          // Send signup request to the backend
-          try {
-            const response = await fetch('http://localhost:5502/signup', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ fullName, email, password, defaultLocation }),
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-              Swal.fire({
-                title: 'Success!',
-                text: data.message,
-                icon: 'success',
-                confirmButtonText: 'Continue',
-              }).then(() => {
-                window.location.href = 'dashboard.html'; // Redirect to dashboard
-              });
-            } else {
-              Swal.fire({
-                title: 'Error!',
-                text: data.message,
-                icon: 'error',
-                confirmButtonText: 'Try Again',
-              });
-            }
-          } catch (error) {
-            Swal.fire({
-              title: 'Error!',
-              text: 'An error occurred. Please try again.',
-              icon: 'error',
-              confirmButtonText: 'Try Again',
-            });
-          }
-        });
-      }
-    });
-  </script>
+  <script type="module" src="js/auth/signup.js"></script>
 </body>
-
 </html>
