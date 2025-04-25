@@ -1,92 +1,51 @@
-let users = [
-  {
-    email: "zaararahman242@gmail.com",
-    defaultLocation: "Dhaka, Bangladesh",
-    savedLocations: ["New York, USA", "London, UK"],
-  },
-  {
-    email: "kims75587@gmail.com",
-    defaultLocation: "Dhaka",
-    savedLocations: ["Paris, France", "Tokyo, Japan"],
-  },
-  {
-    email: "2220281@iub.edu.bd",
-    defaultLocation: "London, UK",
-    savedLocations: ["Sydney, Australia", "Berlin, Germany"],
-  },
-  {
-    email: "2110827@iub.edu.bd",
-    defaultLocation: "Canada",
-    savedLocations: ["Sydney, Australia", "Berlin, Germany"],
-  },
-  {
-    email: "2110253@iub.edu.bd",
-    defaultLocation: "Japan",
-    savedLocations: ["Sydney, Australia", "Berlin, Germany"],
-  },
-];
-async function fetchUsers() {
-  try {
-    const response = await fetch("http://localhost:5502/users");
-    if (!response.ok) {
-      throw new Error("Failed to fetch users");
-    }
-    const users = await response.json();
-    return users;
-  } catch (error) {
-    console.error("Error fetching users:", error);
-    return [];
+import supabase from './supabase.js'
+
+// Check admin status
+async function checkAdmin() {
+  const { data: { user } } = await supabase.auth.getUser()
+  
+  if (!user || user.email !== 'admin@gmail.com') {
+    window.location.href = 'index.html'
+    return false
   }
+  return true
 }
 
-// Populate the table with users
-async function populateTable() {
-  const users = await fetchUsers();
-  const tableBody = document.getElementById("user-table-body");
+// Load admin data
+async function loadAdminData() {
+  const isAdmin = await checkAdmin()
+  if (!isAdmin) return
 
-  tableBody.innerHTML = "";
+  // Get user stats
+  const { count: totalUsers } = await supabase
+    .from('profiles')
+    .select('*', { count: 'exact' })
 
-  users.forEach((user, index) => {
-    const row = document.createElement("tr");
+  document.getElementById('totalUsers').textContent = totalUsers || 0
 
-    const userEmailCell = document.createElement("td");
-    userEmailCell.textContent = user.email;
-    row.appendChild(userEmailCell);
+  // Get recent signups
+  const { data: recentUsers } = await supabase
+    .from('profiles')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(5)
 
-    const defaultLocationCell = document.createElement("td");
-    defaultLocationCell.textContent = user.defaultLocation;
-    row.appendChild(defaultLocationCell);
-
-    const savedLocationsCell = document.createElement("td");
-    savedLocationsCell.textContent = user.savedLocations.join(", ");
-    row.appendChild(savedLocationsCell);
-
-    const actionCell = document.createElement("td");
-    const removeButton = document.createElement("button");
-    removeButton.textContent = "Remove";
-    removeButton.classList.add("remove-button");
-    removeButton.addEventListener("click", () => removeUser(index));
-    actionCell.appendChild(removeButton);
-    row.appendChild(actionCell);
-
-    tableBody.appendChild(row);
-  });
-}
-
-// Remove a user (frontend-only for now)
-function removeUser(index) {
-  // This is a frontend-only removal. To persist changes, you need to update the backend.
-  users.splice(index, 1);
-  populateTable();
+  const tbody = document.querySelector('#usersTable tbody')
+  tbody.innerHTML = recentUsers.map(user => `
+    <tr>
+      <td>${user.full_name}</td>
+      <td>${user.email}</td>
+      <td>${user.default_location}</td>
+      <td>${new Date(user.created_at).toLocaleDateString()}</td>
+    </tr>
+  `).join('')
 }
 
 // Logout
-function handleLogout() {
-  window.location.href = "index.html";
-}
+document.getElementById('logout').addEventListener('click', async () => {
+  await supabase.auth.signOut()
+  window.location.href = 'index.html'
+})
 
-const logoutButton = document.getElementById("logout-button");
-logoutButton.addEventListener("click", handleLogout);
-
-// Initialize table on page load
-populateTable();
+// Initialize
+document.addEventListener('DOMContentLoaded', loadAdminData)
