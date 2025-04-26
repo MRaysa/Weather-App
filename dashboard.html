@@ -5,96 +5,911 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="./images/weather-logo.png" type="image/x-icon">
-    <title>Dashboard - Weather App</title>
-    <link rel="stylesheet" href="dashboard.css">
-    <link rel="stylesheet" href="animate.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Dashboard - WeatherScape</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --secondary: #06b6d4;
+            --accent: #10b981;
+            --text: #1f2937;
+            --light-bg: #f9fafb;
+            --card-bg: rgba(255, 255, 255, 0.9);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--light-bg);
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        .weather-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            transition: all 0.3s ease;
+        }
+
+        .weather-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.15);
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .temperature-gradient {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.6;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.6;
+            }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .animate-pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* Navbar */
+        .nav-link {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: white;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Weather elements */
+        .weather-icon-container {
+            position: relative;
+            width: 160px;
+            height: 160px;
+        }
+
+        .weather-icon {
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
+            transition: all 0.3s ease;
+        }
+
+        .weather-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .condition-badge {
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            background: white;
+            border-radius: 9999px;
+            padding: 0.25rem 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Hourly forecast cards */
+        .hourly-card {
+            transition: all 0.3s ease;
+            min-width: 96px;
+            backdrop-filter: blur(8px);
+        }
+
+        .hourly-card:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        /* Forecast day cards */
+        .forecast-day {
+            transition: all 0.3s ease;
+        }
+
+        .forecast-day:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Highlight cards */
+        .highlight-card {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .highlight-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+            z-index: 1;
+        }
+
+        .highlight-card:hover {
+            transform: translateY(-3px);
+        }
+
+        /* Button styles */
+        .btn-primary {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%, -50%);
+            transform-origin: 50% 50%;
+        }
+
+        .btn-primary:hover::after {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+
+        /* Background elements */
+        .bg-blur {
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .weather-icon-container {
+                width: 120px;
+                height: 120px;
+            }
+        }
+    </style>
 </head>
 
-<body>
-    <header>
-        <nav class="navbar">
-            <div class="navbar-container">
-                <!-- Logo -->
-                <div class="logo">
-                    <img src="images/weather-logo.png" alt="Weather App Logo">
-                </div>
-
-                <!-- Middle Links -->
-                <ul class="nav-links" id="nav-links">
-                    <li><a href="#" class="active">Home</a></li>
-                    <li><a href="./average.html">Average</a></li>
-                    <li><a href="#">Locations</a></li>
-                    <li><a href="./index.html">Logout</a></li>
-                </ul>
-
-                <!-- Right Side: Search -->
-                <div class="navbar-right">
-                    <div class="search-bar">
-                        <input type="text" id="search-input" placeholder="Search Location" class="search-input">
-                        <button id="search-button" class="search-button">Search</button>
-
-                    </div>
-                    <!-- Avatar Button -->
-                    <div tabindex="0" role="button" class="avatar-button">
-                        <div class="avatar-image">
-                            <a href="./profile.html"><img alt="User Avatar"
-                                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" /></a>
-                        </div>
-                    </div>
-                </div>
-
-
-                <!-- Hamburger Icon (Visible on Small Screens) -->
-                <div class="hamburger" id="hamburger">
-                    <i class="fas fa-bars"></i>
-                </div>
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 py-3 bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-400 shadow-lg">
+        <div class="container mx-auto px-4 md:px-16 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <img src="weather-logo.png" alt="Weather App Logo" class="h-10 drop-shadow-md">
+                <span class="text-white font-bold text-xl hidden sm:block">WeatherScape</span>
             </div>
-        </nav>
-    </header>
 
-    <main>
-        <section>
-            <!-- Dashboard Container -->
-            <div class="dashboard-container">
-                <!-- Header Section -->
-                <div class="dashboard-header">
-                    <h1 id="location-header">Current Weather in Dhaka, Bangladesh</h1>
-                    <p>Stay updated with the latest weather conditions and forecasts.</p>
+            <div class="hidden md:flex items-center space-x-6">
+                <!-- Search Bar -->
+                <div class="relative mr-4 group">
+                    <input type="text" id="search-input" placeholder="Search Location"
+                        class="bg-white/20 text-white placeholder-white/70 rounded-full py-2 pl-4 pr-10 focus:outline-none focus:ring-2 focus:ring-cyan-300 w-48 transition-all duration-300 focus:w-64 group-hover:w-64">
+                    <button id="search-button"
+                        class="absolute right-2 top-1/2 transform -translate-y-1/2 text-white/80 hover:text-white transition-colors">
+                        <i class="fas fa-search"></i>
+                    </button>
                 </div>
 
-                <!-- Weather Overview Section -->
-                <div class="weather-overview">
-                    <!-- Current Weather -->
-                    <div class="weather-card current-weather">
-                        <h2>Current Weather</h2>
-                        <a href="./details.html"><div class="weather-info"></a>
-                            <div class="weather-icon">
-                                <img id="current-weather-icon" src="images/sunny.png" alt="Weather Icon">
-                            </div>
-                            <div class="weather-details" id="current-weather-details">
-                                <!-- Dynamically populated -->
-                            </div>
+                <ul class="flex space-x-6">
+                    <li>
+                        <a href="./dashboard.html" class="nav-link text-white font-medium px-1 py-2">
+                            <span class="flex items-center">
+                                <i class="fas fa-home mr-2"></i>
+                                Home
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="./average.html" class="nav-link text-white/90 hover:text-white font-medium px-1 py-2">
+                            <span class="flex items-center">
+                                <i class="fas fa-chart-line mr-2"></i>
+                                Average
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/windyMap.html" class="nav-link text-white/90 hover:text-white font-medium px-1 py-2">
+                            <span class="flex items-center">
+                                <i class="fas fa-wind mr-2"></i>
+                                WindScape
+                            </span>
+                        </a>
+                    </li>
+
+                    <!-- Marks Dropdown -->
+                    <li class="relative group">
+                        <button class="nav-link text-white font-medium px-1 py-6 flex items-center focus:outline-none">
+                            <span class="flex items-center">
+                                <i class="fas fa-table mr-2"></i>
+                                Marks
+                                <i
+                                    class="fas fa-chevron-down ml-2 text-xs transition-transform group-hover:rotate-180"></i>
+                            </span>
+                        </button>
+                        <div
+                            class="absolute left-0 mt-6 w-48 bg-white rounded-md shadow-lg py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                            <a href="./marksAysa.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Marks
+                                Aysa</a>
+                            <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Marks Zara</a>
+                            <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Marks Hamim</a>
+                            <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Marks Moon</a>
                         </div>
+                    </li>
+
+                    <!-- Info Dropdown -->
+                    <li class="relative group">
+                        <button
+                            class="nav-link text-white/90 hover:text-white font-medium px-1 py-6 flex items-center focus:outline-none">
+                            <span class="flex items-center">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                Info
+                                <i
+                                    class="fas fa-chevron-down ml-2 text-xs transition-transform group-hover:rotate-180"></i>
+                            </span>
+                        </button>
+                        <div
+                            class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                            <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Info Aysa</a>
+                            <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Info Zara</a>
+                            <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Info Hamim</a>
+                            <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Info Moon</a>
+                        </div>
+                    </li>
+
+                    <li>
+                        <a href="./index.html"
+                            class="relative text-white/90 hover:text-white font-medium px-1 py-2 group">
+                            <span class="flex items-center">
+                                <i class="fas fa-sign-out-alt mr-2"></i>
+                                Logout
+                            </span>
+                            <span
+                                class="absolute bottom-0 left-0 w-full h-0.5 bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <div class="relative group">
+                    <a href="./profile.html" class="block">
+                        <img alt="User Avatar"
+                            src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                            class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-lg hover:scale-110 transition-transform">
+                        <span
+                            class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></span>
+                    </a>
+                    <div
+                        class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        <a href="./profile.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Profile</a>
+                        <a href="./settings.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Settings</a>
+                        <a href="./index.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Logout</a>
+                    </div>
+                </div>
+
+                <button class="md:hidden text-white focus:outline-none" id="hamburger">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="md:hidden fixed inset-0 bg-black/70 z-40 pt-20 hidden" id="mobileMenu">
+            <div class="bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-400 p-6 shadow-xl">
+                <!-- Mobile Search Bar -->
+                <div class="mb-6 flex">
+                    <input type="text" id="mobile-search-input" placeholder="Search Location"
+                        class="flex-grow bg-white/20 text-white placeholder-white/70 rounded-l-full py-2 px-4 focus:outline-none">
+                    <button id="mobile-search-button"
+                        class="bg-cyan-500 text-white font-medium py-2 px-4 rounded-r-full transition-colors hover:bg-cyan-600">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+
+                <ul class="space-y-6">
+                    <li>
+                        <a href="./dashboard.html"
+                            class="flex items-center py-3 px-6 rounded-lg bg-white/10 text-white font-medium hover:bg-white/20 transition-all">
+                            <i class="fas fa-home mr-4"></i>
+                            Home
+                        </a>
+                    </li>
+                    <li>
+                        <a href="./average.html"
+                            class="flex items-center py-3 px-6 rounded-lg bg-white/10 text-white font-medium hover:bg-white/20 transition-all">
+                            <i class="fas fa-chart-line mr-4"></i>
+                            Average
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/windyMap.html"
+                            class="flex items-center py-3 px-6 rounded-lg bg-white/10 text-white font-medium hover:bg-white/20 transition-all">
+                            <i class="fas fa-wind mr-4"></i>
+                            WindScape
+                        </a>
+                    </li>
+
+                    <!-- Mobile Marks Dropdown -->
+                    <li>
+                        <button
+                            class="mobile-dropdown-toggle flex items-center justify-between w-full py-3 px-6 rounded-lg bg-white/10 text-white font-medium hover:bg-white/20 transition-all">
+                            <span class="flex items-center">
+                                <i class="fas fa-table mr-4"></i>
+                                Marks
+                            </span>
+                            <i class="fas fa-chevron-down transition-transform"></i>
+                        </button>
+                        <ul class="mobile-dropdown-content pl-8 mt-2 space-y-2 hidden">
+                            <li><a href="#" class="block py-2 px-4 rounded-lg bg-white/5 hover:bg-white/10">Marks
+                                    Aysa</a>
+                            </li>
+                            <li><a href="#" class="block py-2 px-4 rounded-lg bg-white/5 hover:bg-white/10">Marks
+                                    Zara</a>
+                            </li>
+                            <li><a href="#" class="block py-2 px-4 rounded-lg bg-white/5 hover:bg-white/10">Marks
+                                    Hamim</a>
+                            </li>
+                            <li><a href="#" class="block py-2 px-4 rounded-lg bg-white/5 hover:bg-white/10">Marks
+                                    Moon</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- Mobile Info Dropdown -->
+                    <li>
+                        <button
+                            class="mobile-dropdown-toggle flex items-center justify-between w-full py-3 px-6 rounded-lg bg-white/10 text-white font-medium hover:bg-white/20 transition-all">
+                            <span class="flex items-center">
+                                <i class="fas fa-info-circle mr-4"></i>
+                                Info
+                            </span>
+                            <i class="fas fa-chevron-down transition-transform"></i>
+                        </button>
+                        <ul class="mobile-dropdown-content pl-8 mt-2 space-y-2 hidden">
+                            <li><a href="#" class="block py-2 px-4 rounded-lg bg-white/5 hover:bg-white/10">Info
+                                    Aysa</a>
+                            </li>
+                            <li><a href="#" class="block py-2 px-4 rounded-lg bg-white/5 hover:bg-white/10">Info
+                                    Zara</a>
+                            </li>
+                            <li><a href="#" class="block py-2 px-4 rounded-lg bg-white/5 hover:bg-white/10">Info
+                                    Hamim</a>
+                            </li>
+                            <li><a href="#" class="block py-2 px-4 rounded-lg bg-white/5 hover:bg-white/10">Info
+                                    Moon</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="./index.html"
+                            class="flex items-center py-3 px-6 rounded-lg bg-white/10 text-white font-medium hover:bg-white/20 transition-all">
+                            <i class="fas fa-sign-out-alt mr-4"></i>
+                            Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- Main Content -->
+    <main class="pt-24 pb-12 px-4 md:px-20 mt-6">
+        <div class="container mx-auto">
+            <!-- Dashboard Header -->
+            <div class="text-center mb-12">
+                <h1 id="location-header" class="text-4xl md:text-5xl font-bold mb-2 gradient-text">Current Weather in
+                    Dhaka, Bangladesh</h1>
+                <p class="text-lg text-gray-600">Stay updated with the latest weather conditions and forecasts</p>
+            </div>
+
+            <!-- Weather Dashboard -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Current Weather Card -->
+                <div class="weather-card p-6 col-span-1 lg:col-span-2">
+                    <div class="flex justify-between items-start mb-6">
+                        <h2 class="text-2xl font-semibold text-gray-700 flex items-center">
+                            <i class="fas fa-cloud-sun mr-3 text-cyan-500"></i>
+                            Current Weather
+                        </h2>
+                        <div class="text-sm text-gray-500" id="current-date-time">Loading...</div>
                     </div>
 
-                    <!-- 3-Day Forecast -->
-                    <div class="weather-card forecast">
-                        <h2>3-Day Forecast</h2>
-                        <div class="forecast-days" id="forecast-days">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Weather Icon and Temp -->
+                        <div class="flex flex-col items-center justify-center">
+                            <div class="weather-icon-container">
+                                <img id="current-weather-icon" src="images/sunny.png" alt="Weather Icon"
+                                    class="w-full h-full weather-icon animate-float">
+                                <div class="condition-badge" id="current-condition">Sunny</div>
+                            </div>
+                            <div class="text-center mt-4">
+                                <div class="text-6xl font-bold temperature-gradient" id="current-temp">24°C</div>
+                                <div class="text-gray-500 mt-2" id="current-feels-like">Feels like 26°C</div>
+                            </div>
+                        </div>
+
+                        <!-- Weather Details -->
+                        <div class="grid grid-cols-2 gap-4" id="current-weather-details">
                             <!-- Dynamically populated -->
                         </div>
                     </div>
+
+                    <div class="mt-8 text-center">
+                        <button onclick="viewDetails('Dhaka')"
+                            class="btn-primary bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:shadow-xl active:scale-95">
+                            View Full Details <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Weather Highlights -->
+                <div class="weather-card p-6">
+                    <h2 class="text-2xl font-semibold text-gray-700 mb-6 flex items-center">
+                        <i class="fas fa-star mr-3 text-yellow-400"></i>
+                        Weather Highlights
+                    </h2>
+
+                    <div class="space-y-5" id="weather-highlights">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+
+                <!-- 3-Day Forecast -->
+                <div class="weather-card p-6 col-span-1 lg:col-span-3">
+                    <h2 class="text-2xl font-semibold text-gray-700 mb-6 flex items-center">
+                        <i class="fas fa-calendar-alt mr-3 text-teal-400"></i>
+                        3-Day Forecast
+                    </h2>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="forecast-days">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+
+                <!-- Hourly Forecast -->
+                <div class="weather-card p-6 col-span-1 lg:col-span-3">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-semibold text-gray-700 flex items-center">
+                            <i class="fas fa-clock mr-3 text-purple-400"></i>
+                            Hourly Forecast
+                        </h2>
+                        <div class="text-sm text-gray-500">Next 12 hours</div>
+                    </div>
+
+                    <div class="overflow-x-auto pb-4">
+                        <div class="flex space-x-4" id="hourly-forecast">
+                            <!-- Dynamically populated -->
+                            <div class="text-center text-sm animate-pulse">Loading hourly data...</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </section>
+        </div>
     </main>
 
-    <script src="dashboard.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-    <script src="./supabase.js"></script>
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-400 py-6">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-white/80">© 2023 WeatherScape. All rights reserved.</p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="text-white hover:text-cyan-200 transition-colors"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-white hover:text-cyan-200 transition-colors"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="text-white hover:text-cyan-200 transition-colors"><i
+                        class="fab fa-instagram"></i></a>
+                <a href="#" class="text-white hover:text-cyan-200 transition-colors"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
 
+    <script>
+        // API Configuration
+        const API_KEY = "1dec1896e77e4da5b0c195326251603"; // Should be moved to environment variables in production
+        const BASE_URL = "https://api.weatherapi.com/v1";
+
+        // DOM Elements
+        const searchInput = document.getElementById("search-input");
+        const searchButton = document.getElementById("search-button");
+        const mobileSearchInput = document.getElementById("mobile-search-input");
+        const mobileSearchButton = document.getElementById("mobile-search-button");
+        const currentWeatherIcon = document.getElementById("current-weather-icon");
+        const currentTemp = document.getElementById("current-temp");
+        const currentCondition = document.getElementById("current-condition");
+        const currentFeelsLike = document.getElementById("current-feels-like");
+        const currentWeatherDetails = document.getElementById("current-weather-details");
+        const weatherHighlights = document.getElementById("weather-highlights");
+        const forecastDays = document.getElementById("forecast-days");
+        const hourlyForecast = document.getElementById("hourly-forecast");
+        const locationHeader = document.getElementById("location-header");
+        const currentDateTime = document.getElementById("current-date-time");
+
+        // Weather Icon Mapping (simplified)
+        const weatherIcons = {
+            1000: "sunny.png", // Clear
+            1003: "PartlyCloudy.png", // Partly cloudy
+            1006: "cloudy.png", // Cloudy
+            1009: "cloudy.png", // Overcast
+            1030: "mist.png", // Mist
+            1063: "Rainy.png", // Patchy rain
+            1066: "snow.png", // Patchy snow
+            1069: "sleet.png", // Patchy sleet
+            1087: "thunder.png", // Thundery outbreaks
+            1135: "fog.png", // Fog
+            1183: "Rainy.png", // Light rain
+            1189: "heavy-rain.png", // Heavy rain
+            1195: "heavy-rain.png", // Heavy freezing rain
+            1213: "snow.png", // Light snow
+            1219: "heavy-snow.png", // Heavy snow
+            1225: "heavy-snow.png", // Ice pellets
+            1240: "shower.png", // Light rain shower
+            1273: "thunder.png", // Patchy light rain with thunder
+            1276: "thunder.png" // Moderate/heavy rain with thunder
+        };
+
+        // Color mapping for weather conditions
+        const weatherColors = {
+            sunny: "text-yellow-400",
+            cloudy: "text-gray-400",
+            rainy: "text-blue-400",
+            thunder: "text-purple-400",
+            snow: "text-cyan-200",
+            fog: "text-gray-300",
+            default: "text-cyan-400"
+        };
+
+        // Update current date and time
+        function updateDateTime() {
+            const now = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            currentDateTime.textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        // Get appropriate weather color
+        function getWeatherColor(condition) {
+            const lowerCondition = condition.toLowerCase();
+            if (lowerCondition.includes("sun") || lowerCondition.includes("clear")) return weatherColors.sunny;
+            if (lowerCondition.includes("cloud")) return weatherColors.cloudy;
+            if (lowerCondition.includes("rain") || lowerCondition.includes("shower")) return weatherColors.rainy;
+            if (lowerCondition.includes("thunder") || lowerCondition.includes("storm")) return weatherColors.thunder;
+            if (lowerCondition.includes("snow") || lowerCondition.includes("sleet")) return weatherColors.snow;
+            if (lowerCondition.includes("fog") || lowerCondition.includes("mist")) return weatherColors.fog;
+            return weatherColors.default;
+        }
+
+        // Fetch Weather Data
+        async function fetchWeatherData(city) {
+            try {
+                // Show loading state
+                locationHeader.textContent = `Loading weather for ${city}...`;
+
+                // Fetch current weather and forecast
+                const [currentResponse, forecastResponse] = await Promise.all([
+                    fetch(`${BASE_URL}/current.json?key=${API_KEY}&q=${city}`),
+                    fetch(`${BASE_URL}/forecast.json?key=${API_KEY}&q=${city}&days=3`)
+                ]);
+
+                const currentData = await currentResponse.json();
+                const forecastData = await forecastResponse.json();
+
+                // Update UI
+                updateCurrentWeather(currentData);
+                updateWeatherHighlights(currentData);
+                updateForecast(forecastData);
+                updateHourlyForecast(forecastData);
+                updateDateTime();
+
+                // Update Location Header
+                locationHeader.textContent = `Current Weather in ${currentData.location.name}, ${currentData.location.country}`;
+
+            } catch (error) {
+                console.error("Error fetching weather data:", error);
+                locationHeader.textContent = "Error loading weather data";
+                locationHeader.classList.remove("gradient-text");
+                locationHeader.classList.add("text-red-400");
+            }
+        }
+
+        // Update Current Weather
+        function updateCurrentWeather(data) {
+            const { location, current } = data;
+            const weatherIconCode = current.condition.code;
+            const weatherIcon = weatherIcons[weatherIconCode] || "sunny.png";
+            const weatherColor = getWeatherColor(current.condition.text);
+
+            // Update current weather icon and temp
+            currentWeatherIcon.src = `images/${weatherIcon}`;
+            currentTemp.textContent = `${current.temp_c}°C`;
+            currentCondition.textContent = current.condition.text;
+            currentFeelsLike.textContent = `Feels like ${current.feelslike_c}°C`;
+            currentCondition.className = `condition-badge ${weatherColor.replace('text-', 'bg-').replace('-400', '-100')} text-${weatherColor.split('-')[1]}-800`;
+
+            // Update current weather details
+            currentWeatherDetails.innerHTML = `
+                <div class="bg-white/20 p-4 rounded-lg transition hover:bg-white/30">
+                    <div class="text-cyan-600 mb-1 flex items-center"><i class="fas fa-temperature-low mr-2"></i> Feels Like</div>
+                    <div class="text-2xl font-semibold">${current.feelslike_c}°C</div>
+                </div>
+                <div class="bg-white/20 p-4 rounded-lg transition hover:bg-white/30">
+                    <div class="text-cyan-600 mb-1 flex items-center"><i class="fas fa-tint mr-2"></i> Humidity</div>
+                    <div class="text-2xl font-semibold">${current.humidity}%</div>
+                </div>
+                <div class="bg-white/20 p-4 rounded-lg transition hover:bg-white/30">
+                    <div class="text-cyan-600 mb-1 flex items-center"><i class="fas fa-wind mr-2"></i> Wind</div>
+                    <div class="text-2xl font-semibold">${current.wind_kph} km/h</div>
+                    <div class="text-sm text-gray-500">${current.wind_dir}</div>
+                </div>
+                <div class="bg-white/20 p-4 rounded-lg transition hover:bg-white/30">
+                    <div class="text-cyan-600 mb-1 flex items-center"><i class="fas fa-eye mr-2"></i> Visibility</div>
+                    <div class="text-2xl font-semibold">${current.vis_km} km</div>
+                </div>
+            `;
+        }
+
+        // Update Weather Highlights
+        function updateWeatherHighlights(data) {
+            const { current } = data;
+
+            weatherHighlights.innerHTML = `
+                <div class="highlight-card bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-lg">
+                    <div class="flex items-center text-purple-600 mb-2">
+                        <i class="fas fa-umbrella mr-2"></i>
+                        <span>Precipitation</span>
+                    </div>
+                    <div class="text-3xl font-bold text-purple-800">${current.precip_mm} mm</div>
+                    <div class="text-sm text-purple-500 mt-1">Last hour</div>
+                </div>
+                
+                <div class="highlight-card bg-gradient-to-br from-yellow-50 to-yellow-100 p-4 rounded-lg">
+                    <div class="flex items-center text-yellow-600 mb-2">
+                        <i class="fas fa-sun mr-2"></i>
+                        <span>UV Index</span>
+                    </div>
+                    <div class="text-3xl font-bold text-yellow-800">${current.uv}</div>
+                    <div class="text-sm text-yellow-500 mt-1">${getUVIndexLevel(current.uv)}</div>
+                </div>
+                
+                <div class="highlight-card bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg">
+                    <div class="flex items-center text-blue-600 mb-2">
+                        <i class="fas fa-cloud-rain mr-2"></i>
+                        <span>Pressure</span>
+                    </div>
+                    <div class="text-3xl font-bold text-blue-800">${current.pressure_mb} mb</div>
+                    <div class="text-sm text-blue-500 mt-1">${current.pressure_in} in</div>
+                </div>
+                
+                <div class="highlight-card bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg">
+                    <div class="flex items-center text-green-600 mb-2">
+                        <i class="fas fa-wind mr-2"></i>
+                        <span>Wind Gusts</span>
+                    </div>
+                    <div class="text-3xl font-bold text-green-800">${current.gust_kph} km/h</div>
+                    <div class="text-sm text-green-500 mt-1">Direction: ${current.wind_dir}</div>
+                </div>
+            `;
+        }
+
+        // Helper function for UV Index level
+        function getUVIndexLevel(uv) {
+            if (uv <= 2) return "Low";
+            if (uv <= 5) return "Moderate";
+            if (uv <= 7) return "High";
+            if (uv <= 10) return "Very High";
+            return "Extreme";
+        }
+
+        // Update 3-Day Forecast
+        function updateForecast(data) {
+            const forecastList = data.forecast.forecastday;
+            forecastDays.innerHTML = forecastList
+                .map((day) => {
+                    const date = new Date(day.date);
+                    const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+                    const weatherIconCode = day.day.condition.code;
+                    const weatherIcon = weatherIcons[weatherIconCode] || "sunny.png";
+                    const weatherColor = getWeatherColor(day.day.condition.text);
+
+                    return `
+                        <div class="forecast-day bg-white/20 p-4 rounded-lg text-center">
+                            <div class="font-semibold text-gray-700 mb-2">${dayName}</div>
+                            <i class="fas fa-cloud-sun text-4xl mb-2 ${weatherColor}"></i>
+                            <div class="text-2xl font-bold text-gray-800">${day.day.avgtemp_c}°C</div>
+                            <div class="text-sm ${weatherColor} mt-1">${day.day.condition.text}</div>
+                            <div class="flex justify-between text-xs mt-3 text-gray-500">
+                                <span><i class="fas fa-arrow-up mr-1"></i>${day.day.maxtemp_c}°</span>
+                                <span><i class="fas fa-arrow-down mr-1"></i>${day.day.mintemp_c}°</span>
+                            </div>
+                        </div>
+                    `;
+                })
+                .join("");
+        }
+
+        // Update Hourly Forecast
+
+        function updateHourlyForecast(data) {
+            const todayHours = data.forecast.forecastday[0].hour;
+            const tomorrowHours = data.forecast.forecastday[1]?.hour || []; // Get next day's hours if available
+            const now = new Date();
+            const currentHour = now.getHours();
+
+            // Combine remaining hours today with hours from tomorrow if needed
+            const remainingHoursToday = todayHours.slice(currentHour);
+            const neededFromTomorrow = 12 - remainingHoursToday.length;
+            const nextHours = remainingHoursToday.concat(
+                neededFromTomorrow > 0 ? tomorrowHours.slice(0, neededFromTomorrow) : []
+            );
+
+            // Show next 12 hours of forecast (or as many as available)
+            hourlyForecast.innerHTML = nextHours
+                .slice(0, 12) // Ensure we never show more than 12
+                .map((hour) => {
+                    const hourTime = new Date(hour.time);
+                    const displayTime = hourTime.toLocaleTimeString('en-US', { hour: 'numeric', hour12: true });
+                    const weatherIconCode = hour.condition.code;
+                    const weatherColor = getWeatherColor(hour.condition.text);
+
+                    return `
+                <div class="hourly-card bg-white/20 p-3 rounded-lg text-center">
+                    <div class="font-medium text-gray-700">${displayTime}</div>
+                    <i class="fas fa-cloud ${weatherColor} text-2xl my-2"></i>
+                    <div class="font-semibold text-gray-800">${hour.temp_c}°C</div>
+                    <div class="text-xs text-purple-500 mt-1 flex items-center justify-center">
+                        <i class="fas fa-tint mr-1"></i> ${hour.chance_of_rain}%
+                    </div>
+                </div>
+            `;
+                })
+                .join("");
+        }
+        // View Details function
+        function viewDetails(city) {
+            window.location.href = `details.html?city=${encodeURIComponent(city)}`;
+        }
+
+        // Event Listeners
+        searchButton.addEventListener("click", () => {
+            const city = searchInput.value.trim();
+            if (city) fetchWeatherData(city);
+        });
+
+        mobileSearchButton.addEventListener("click", () => {
+            const city = mobileSearchInput.value.trim();
+            if (city) {
+                fetchWeatherData(city);
+                document.getElementById('mobileMenu').classList.add('hidden');
+            }
+        });
+
+        // Search on Enter key
+        searchInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                const city = searchInput.value.trim();
+                if (city) fetchWeatherData(city);
+            }
+        });
+
+        mobileSearchInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                const city = mobileSearchInput.value.trim();
+                if (city) {
+                    fetchWeatherData(city);
+                    document.getElementById('mobileMenu').classList.add('hidden');
+                }
+            }
+        });
+
+        // Mobile menu toggle functionality
+        document.getElementById('hamburger').addEventListener('click', function () {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Mobile dropdown functionality
+        document.querySelectorAll('.mobile-dropdown-toggle').forEach(button => {
+            button.addEventListener('click', function () {
+                const dropdownContent = this.nextElementSibling;
+                const icon = this.querySelector('.fa-chevron-down');
+
+                dropdownContent.classList.toggle('hidden');
+                icon.classList.toggle('rotate-180');
+
+                // Close other open dropdowns
+                document.querySelectorAll('.mobile-dropdown-content').forEach(content => {
+                    if (content !== dropdownContent && !content.classList.contains('hidden')) {
+                        content.classList.add('hidden');
+                        const otherIcon = content.previousElementSibling.querySelector('.fa-chevron-down');
+                        otherIcon.classList.remove('rotate-180');
+                    }
+                });
+            });
+        });
+
+        // Initial Load (Default City: Dhaka, Bangladesh)
+        fetchWeatherData("Dhaka");
+
+        // Update time every minute
+        setInterval(updateDateTime, 60000);
+    </script>
 </body>
 
 </html>
