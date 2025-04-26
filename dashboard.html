@@ -911,55 +911,6 @@
         setInterval(updateDateTime, 60000);
     </script>
 
-
-    <!-- // script for update profile manage -->
-
-    <script>
-        // Initialize Supabase with your keys
-        const supabase = window.supabase.createClient(
-            'https://wyicgttorbmwngjmtsnu.supabase.co',
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5aWNndHRvcmJtd25nam10c251Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU2NjA2NTksImV4cCI6MjA2MTIzNjY1OX0.2303RI9npdrVAQ2xLgg1Q7pLSIlDQXfxhUqdkpnmaj8'
-        );
-
-        // Function to update profile picture in dashboard
-        async function updateProfilePicture() {
-            try {
-                const { data: { user } } = await supabase.auth.getUser();
-                if (!user) return;
-
-                // Check localStorage first
-                const storedPic = localStorage.getItem('profilePicture');
-                if (storedPic) {
-                    document.getElementById('user-avatar').src = storedPic;
-                    return;
-                }
-
-                // Fetch from profiles table if not in localStorage
-                const { data, error } = await supabase
-                    .from('profiles')
-                    .select('profile_picture')
-                    .eq('id', user.id)
-                    .single();
-
-                if (!error && data?.profile_picture) {
-                    document.getElementById('user-avatar').src = data.profile_picture;
-                    localStorage.setItem('profilePicture', data.profile_picture);
-                }
-            } catch (error) {
-                console.error('Error updating profile picture:', error);
-            }
-        }
-
-        // Call this when dashboard loads
-        document.addEventListener('DOMContentLoaded', updateProfilePicture);
-
-        // Optional: Listen for storage events to update in real-time
-        window.addEventListener('storage', (event) => {
-            if (event.key === 'profilePicture') {
-                document.getElementById('user-avatar').src = event.newValue;
-            }
-        });
-    </script>
 </body>
 
 </html>
