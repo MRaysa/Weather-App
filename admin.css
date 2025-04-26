@@ -351,3 +351,229 @@ tr:hover {
     grid-template-columns: 1fr;
   }
 }
+/* Toast notifications */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 24px;
+  border-radius: var(--rounded);
+  background-color: var(--primary);
+  color: white;
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.toast-success {
+  background-color: var(--success);
+}
+
+.toast-error {
+  background-color: var(--danger);
+}
+
+.toast-warning {
+  background-color: #f59e0b;
+}
+
+.fade-out {
+  opacity: 0;
+}
+
+/* Additional status badge */
+.status-admin {
+  background-color: rgba(67, 97, 238, 0.1);
+  color: var(--primary);
+}
+
+/* Table improvements */
+#usersTable {
+  min-width: 800px;
+}
+
+#usersTable th:nth-child(4),
+#usersTable td:nth-child(4) {
+  width: 120px;
+}
+
+#usersTable th:nth-child(5),
+#usersTable td:nth-child(5) {
+  width: 100px;
+  text-align: center;
+}
+
+#usersTable th:nth-child(6),
+#usersTable td:nth-child(6) {
+  width: 120px;
+  text-align: center;
+}
+/* Add these to your existing admin.css */
+.error-message {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--danger);
+  color: white;
+  padding: 12px 24px;
+  border-radius: var(--rounded);
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from { top: -50px; opacity: 0; }
+  to { top: 20px; opacity: 1; }
+}
+
+.no-data, .loading-state, .error-state {
+  text-align: center;
+  padding: 2rem;
+  color: var(--gray-700);
+}
+
+.error-state {
+  color: var(--danger);
+}
+
+.status-user {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--success);
+}
+
+.status-admin {
+  background-color: rgba(67, 97, 238, 0.1);
+  color: var(--primary);
+}
+/* Add these to your existing admin.css */
+.message {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 24px;
+  border-radius: 4px;
+  color: white;
+  z-index: 1000;
+  animation: slideIn 0.3s ease;
+}
+
+.message.success {
+  background-color: #10b981;
+}
+
+.message.error {
+  background-color: #ef4444;
+}
+
+@keyframes slideIn {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.loading-state, .no-data, .error-state {
+  text-align: center;
+  padding: 2rem;
+}
+
+.loading-state {
+  color: #4361ee;
+}
+
+.no-data {
+  color: #6b7280;
+}
+
+.error-state {
+  color: #ef4444;
+}
+
+.status-admin {
+  background-color: rgba(67, 97, 238, 0.1);
+  color: #4361ee;
+  padding: 4px 8px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+}
+
+.status-user {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  padding: 4px 8px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+}
+
+tr.loading {
+  opacity: 0.6;
+  position: relative;
+}
+
+tr.loading::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255,255,255,0.5);
+}
+/* Message styles */
+.message {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 24px;
+  border-radius: 4px;
+  color: white;
+  z-index: 1000;
+  animation: slideIn 0.3s ease;
+}
+
+.message.success {
+  background-color: #10b981;
+}
+
+.message.error {
+  background-color: #ef4444;
+}
+
+@keyframes slideIn {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Status indicators */
+.loading-state, .no-data, .error-state {
+  text-align: center;
+  padding: 2rem;
+}
+
+.loading-state {
+  color: #4361ee;
+}
+
+.no-data {
+  color: #6b7280;
+}
+
+.error-state {
+  color: #ef4444;
+}
+
+/* Loading spinner */
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(0,0,0,0.1);
+  border-radius: 50%;
+  border-top-color: #4361ee;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

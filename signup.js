@@ -80,4 +80,15 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
     submitBtn.disabled = false
     submitBtn.innerHTML = '<span>Sign Up</span>'
   }
+  // In your signup.js or via Supabase dashboard
+await supabase.auth.signUp({
+  email: 'admin@admin.com',
+  password: 'admin',
+  options: {
+    data: {
+      full_name: 'Admin User',
+      default_location: 'Admin HQ'
+    }
+  }
+});
 })

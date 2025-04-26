@@ -7,7 +7,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   const password = document.getElementById('password').value
   
   // Admin bypass (remove in production)
-  if (email === 'admin@gmail.com' && password === 'admin') {
+  if (email === 'admin@admin.com' && password === 'admin') {
     window.location.href = 'admin.html'
     return
   }

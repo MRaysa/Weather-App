@@ -15,15 +15,14 @@
   <div class="admin-container">
     <aside class="sidebar">
       <div class="logo">
-        <img src="https://via.placeholder.com/36" alt="Weather Logo">
+        <img src="./images/weather-logo.png" alt="Weather Logo">
         <h2>Weather Admin</h2>
       </div>
       <nav>
         <ul>
           <li class="active"><a href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-          <li><a href="#"><i class="fas fa-users"></i> Users</a></li>
           <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
-          <li><a href="#" id="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+          <li><a href="./index.html" id="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
       </nav>
     </aside>
@@ -66,13 +65,15 @@
         <h2>User List</h2>
         <table id="usersTable">
           <thead>
-            <tr>
-              <th>User Name</th>
-              <th>Email</th>
-              <th>Location</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
+<!-- Update your table header to match this -->
+          <tr>
+            <th>User Name</th>
+            <th>Email</th>
+            <th>Location</th  >
+            <th>Joined</th>
+            <th>Role</th>
+            <th>Action</th>
+           </tr>
           </thead>
           <tbody id="usersTableBody">
             <tr>
@@ -87,243 +88,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    // Initialize Supabase
-    const supabaseUrl = 'YOUR_SUPABASE_URL';
-    const supabaseKey = 'YOUR_SUPABASE_KEY';
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
-    // DOM Elements
-    const usersTableBody = document.getElementById('usersTableBody');
-    const totalUsersEl = document.getElementById('totalUsers');
-    const activeUsersEl = document.getElementById('activeUsers');
-    const newUsersEl = document.getElementById('newUsers');
-    const searchInput = document.getElementById('searchInput');
-    const refreshBtn = document.getElementById('refreshBtn');
-    const logoutBtn = document.getElementById('logout');
-
-    // Check admin status
-    async function checkAdmin() {
-      const { data: { user } } = await supabase.auth.getUser();
-
-      if (!user || !user.email.endsWith('@admin.com')) {
-        window.location.href = 'index.html';
-        return false;
-      }
-      return true;
-    }
-
-    // Format date
-    function formatDate(dateString) {
-      const options = { year: 'numeric', month: 'short', day: 'numeric' };
-      return new Date(dateString).toLocaleDateString(undefined, options);
-    }
-
-    // Determine user status
-    function getUserStatus(lastActive) {
-      const lastActiveDate = new Date(lastActive);
-      const thirtyDaysAgo = new Date();
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-
-      return lastActiveDate >= thirtyDaysAgo ? 'Active' : 'Inactive';
-    }
-
-    // Fetch all users from database
-    async function fetchUsers() {
-      try {
-        const { data: users, error } = await supabase
-          .from('users')
-          .select('*')
-          .order('created_at', { ascending: false });
-
-        if (error) throw error;
-        return users;
-      } catch (error) {
-        console.error('Error fetching users:', error);
-        return [];
-      }
-    }
-
-    // Fetch stats from database
-    async function fetchStats() {
-      try {
-        // Total users count
-        const { count: totalUsers } = await supabase
-          .from('users')
-          .select('*', { count: 'exact', head: true });
-
-        // Active today count (users who were active today)
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        const { count: activeToday } = await supabase
-          .from('users')
-          .select('*', { count: 'exact', head: true })
-          .gte('last_active', today.toISOString());
-
-        // New this week count
-        const oneWeekAgo = new Date();
-        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-        oneWeekAgo.setHours(0, 0, 0, 0);
-
-        const { count: newThisWeek } = await supabase
-          .from('users')
-          .select('*', { count: 'exact', head: true })
-          .gte('created_at', oneWeekAgo.toISOString());
-
-        return {
-          totalUsers,
-          activeToday,
-          newThisWeek
-        };
-      } catch (error) {
-        console.error('Error fetching stats:', error);
-        return {
-          totalUsers: 0,
-          activeToday: 0,
-          newThisWeek: 0
-        };
-      }
-    }
-
-    // Delete user from database
-    async function deleteUser(userId) {
-      try {
-        const { error } = await supabase
-          .from('users')
-          .delete()
-          .eq('id', userId);
-
-        if (error) throw error;
-        return true;
-      } catch (error) {
-        console.error('Error deleting user:', error);
-        return false;
-      }
-    }
-
-    // Render users table
-    function renderUsers(users) {
-      if (users.length === 0) {
-        usersTableBody.innerHTML = `
-          <tr>
-            <td colspan="5" style="text-align: center;">No users found</td>
-          </tr>
-        `;
-        return;
-      }
-
-      usersTableBody.innerHTML = users.map(user => `
-        <tr data-id="${user.id}">
-          <td>${user.full_name || 'Unknown'}</td>
-          <td>${user.email}</td>
-          <td>${user.location || 'Not specified'}</td>
-          <td>
-            <span class="status-badge ${getUserStatus(user.last_active) === 'Active' ? 'status-active' : 'status-inactive'}">
-              ${getUserStatus(user.last_active)}
-            </span>
-          </td>
-          <td>
-            <button class="btn btn-danger delete-btn" data-id="${user.id}">
-              <i class="fas fa-trash"></i> Delete
-            </button>
-          </td>
-        </tr>
-      `).join('');
-
-      // Add event listeners to delete buttons
-      document.querySelectorAll('.delete-btn').forEach(button => {
-        button.addEventListener('click', async () => {
-          const userId = button.getAttribute('data-id');
-          const row = button.closest('tr');
-          const userName = row.cells[0].textContent;
-
-          if (confirm(`Are you sure you want to delete ${userName}? This action cannot be undone.`)) {
-            row.classList.add('loading');
-            button.disabled = true;
-            button.innerHTML = '<span class="spinner"></span> Deleting...';
-
-            const success = await deleteUser(userId);
-
-            if (success) {
-              row.remove();
-              // Update stats after deletion
-              updateStats();
-            } else {
-              alert('Failed to delete user. Please try again.');
-              row.classList.remove('loading');
-              button.disabled = false;
-              button.innerHTML = '<i class="fas fa-trash"></i> Delete';
-            }
-          }
-        });
-      });
-    }
-
-    // Update stats display
-    async function updateStats() {
-      const stats = await fetchStats();
-
-      totalUsersEl.textContent = stats.totalUsers?.toLocaleString() || '0';
-      activeUsersEl.textContent = stats.activeToday?.toLocaleString() || '0';
-      newUsersEl.textContent = stats.newThisWeek?.toLocaleString() || '0';
-    }
-
-    // Filter users based on search input
-    function filterUsers(users, searchTerm) {
-      if (!searchTerm) return users;
-
-      const term = searchTerm.toLowerCase();
-      return users.filter(user =>
-        (user.full_name && user.full_name.toLowerCase().includes(term)) ||
-        (user.email && user.email.toLowerCase().includes(term)) ||
-        (user.location && user.location.toLowerCase().includes(term))
-      );
-    }
-
-    // Initialize the admin panel
-    async function initAdminPanel() {
-      const isAdmin = await checkAdmin();
-      if (!isAdmin) return;
-
-      // Load initial data
-      await updateStats();
-
-      const users = await fetchUsers();
-      renderUsers(users);
-
-      // Set up search functionality
-      searchInput.addEventListener('input', () => {
-        const filteredUsers = filterUsers(users, searchInput.value.trim());
-        renderUsers(filteredUsers);
-      });
-
-      // Set up refresh button
-      refreshBtn.addEventListener('click', async () => {
-        refreshBtn.classList.add('loading');
-        refreshBtn.disabled = true;
-        refreshBtn.innerHTML = '<span class="spinner"></span> Refreshing...';
-
-        const updatedUsers = await fetchUsers();
-        renderUsers(updatedUsers);
-        await updateStats();
-
-        refreshBtn.classList.remove('loading');
-        refreshBtn.disabled = false;
-        refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh';
-      });
-
-      // Set up logout
-      logoutBtn.addEventListener('click', async (e) => {
-        e.preventDefault();
-        await supabase.auth.signOut();
-        window.location.href = 'index.html';
-      });
-    }
-
-    // Start the admin panel
-    document.addEventListener('DOMContentLoaded', initAdminPanel);
-  </script>
+  <script src="./admin.js"></script>
 </body>
 
 </html>
