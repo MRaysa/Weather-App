@@ -1,7 +1,6 @@
 const supabase = window.supabase.createClient(
-    'https://csqxcidppjfcamonqpia.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNzcXhjaWRwcGpmY2Ftb25xcGlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUyMTQ3MDQsImV4cCI6MjA2MDc5MDcwNH0.h3wv7O81cvUbhatQnssAGuG3XFNnGDvBOziPY4v57h8'
-
+  'https://wyicgttorbmwngjmtsnu.supabase.co', 
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5aWNndHRvcmJtd25nam10c251Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU2NjA2NTksImV4cCI6MjA2MTIzNjY1OX0.2303RI9npdrVAQ2xLgg1Q7pLSIlDQXfxhUqdkpnmaj8'
   )
   
   export default supabase

@@ -1,14 +1,10 @@
-// Option 1: Use the correct ES module import (recommended)
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-// Option 2: Alternative CDN import (if esm.sh is blocked)
-// import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2'
-
-// Initialize Supabase client
 const supabase = createClient(
-  'https://csqxcidppjfcamonqpia.supabase.co', 
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNzcXhjaWRwcGpmY2Ftb25xcGlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUyMTQ3MDQsImV4cCI6MjA2MDc5MDcwNH0.h3wv7O81cvUbhatQnssAGuG3XFNnGDvBOziPY4v57h8'
-)
+  'https://wyicgttorbmwngjmtsnu.supabase.co', 
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5aWNndHRvcmJtd25nam10c251Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU2NjA2NTksImV4cCI6MjA2MTIzNjY1OX0.2303RI9npdrVAQ2xLgg1Q7pLSIlDQXfxhUqdkpnmaj8'
+  )
+
 
 document.getElementById('signupForm').addEventListener('submit', async (e) => {
   e.preventDefault()
@@ -18,33 +14,48 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
   const fullName = document.getElementById('fullName').value.trim()
   const location = document.getElementById('location').value.trim()
 
-  // Basic validation
+  // Validate inputs
   if (!email || !password || !fullName || !location) {
     Swal.fire('Error', 'Please fill in all fields', 'error')
     return
   }
 
   const submitBtn = e.target.querySelector('button[type="submit"]')
-  const originalBtnText = submitBtn.innerHTML
   submitBtn.disabled = true
   submitBtn.innerHTML = '<span>Creating Account...</span>'
 
   try {
-    // Sign up user with metadata
-    const { data, error } = await supabase.auth.signUp({
+    // 1. Sign up user
+    const { data: { user }, error: authError } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: {
+        data: {  // This stores data in auth.users table
           full_name: fullName,
           default_location: location
-        },
-        emailRedirectTo: window.location.origin
+        }
       }
     })
 
-    if (error) throw error
-    if (!data.user) throw new Error('User creation failed')
+    if (authError) throw authError
+    if (!user) throw new Error('User creation failed')
+
+    // 2. Create profile in public.profiles table (optional)
+    // Wait 1 second to ensure user is propagated
+    await new Promise(resolve => setTimeout(resolve, 1000))
+
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .insert({
+        id: user.id,
+        full_name: fullName,
+        email,
+        default_location: location
+      })
+
+    if (profileError && !profileError.message.includes('duplicate key')) {
+      throw profileError
+    }
 
     Swal.fire({
       title: 'Success!',
@@ -60,15 +71,13 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
     let errorMessage = 'Account creation failed. Please try again.'
     if (error.message.includes('already registered')) {
       errorMessage = 'This email is already registered'
-    } else if (error.message.includes('invalid email')) {
-      errorMessage = 'Please enter a valid email address'
-    } else if (error.message.includes('password')) {
-      errorMessage = 'Password must be at least 6 characters'
+    } else if (error.message.includes('permission denied')) {
+      errorMessage = 'System configuration error. Please try again later.'
     }
 
     Swal.fire('Error', errorMessage, 'error')
   } finally {
     submitBtn.disabled = false
-    submitBtn.innerHTML = originalBtnText
+    submitBtn.innerHTML = '<span>Sign Up</span>'
   }
 })
