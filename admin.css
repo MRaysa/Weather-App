@@ -577,3 +577,80 @@ tr.loading::after {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+/* Add these to your existing admin.css */
+.admin-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+#allRoutesContainer {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#routesList {
+  columns: 3;
+  list-style: none;
+  padding: 0;
+}
+
+#routesList li {
+  margin-bottom: 0.5rem;
+  break-inside: avoid;
+}
+
+#routesList a {
+  color: #4299e1;
+  text-decoration: none;
+}
+
+#routesList a:hover {
+  text-decoration: underline;
+}
+
+#userManagement {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#usersTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+#usersTable th, #usersTable td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+#usersTable th {
+  background: #f7fafc;
+  font-weight: 600;
+}
+
+.btn-edit {
+  background: #48bb78;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-delete {
+  background: #f56565;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  margin-left: 0.5rem;
+}

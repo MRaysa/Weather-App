@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AQI Map Feature Evaluation</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #4fc3f7;
+            --background-color: #f8f9fa;
+            --card-color: #ffffff;
+            --text-color: #333333;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1, h2 {
+            margin: 0;
+        }
+        
+        .summary-card {
+            background-color: var(--card-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .summary-item {
+            text-align: center;
+            padding: 0 1rem;
+        }
+        
+        .summary-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .summary-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--card-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 500;
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .marks-cell {
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+        
+        .nav-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background-color: #e0e0e0;
+            border-radius: 3px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--accent-color);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AQI Map Feature Evaluation</h1>
+            <p>Detailed assessment of implemented features</p>
+        </header>
+        
+        <div class="summary-card">
+            <div class="summary-item">
+                <div class="summary-value" id="total-features">0</div>
+                <div class="summary-label">Features Implemented</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-value" id="total-marks">0</div>
+                <div class="summary-label">Total Marks</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-value" id="percentage">0%</div>
+                <div class="summary-label">Percentage</div>
+            </div>
+        </div>
+        
+        <table id="features-table">
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>Description</th>
+                    <th>Marks</th>
+                    <th>Justification</th>
+                    <th>Route</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        
+        <div class="nav-buttons">
+            <button class="nav-button" onclick="window.location.href='./dashboard.html'">Home</button>
+        </div>
+    </div>
+
+    <script>
+        // Feature data
+        const features = [
+            {
+                feature: "Base Map Implementation",
+                description: "Interactive world map using OpenStreetMap tiles",
+                marks: 2,
+                justification: "Core functionality for visualization",
+                route: "app.js"
+            },
+            {
+                feature: "AQI Data Integration",
+                description: "Fetching and processing data from OpenWeatherMap API",
+                marks: 3,
+                justification: "Complex API integration and data processing",
+                route: "app.js"
+            },
+            {
+                feature: "Color Scale Visualization",
+                description: "Proper EPA AQI color scale implementation",
+                marks: 2,
+                justification: "Accurate representation of AQI levels",
+                route: "app.js"
+            },
+            {
+                feature: "Heatmap Layer",
+                description: "Smooth blending of AQI data points",
+                marks: 2,
+                justification: "Advanced visualization technique",
+                route: "app.js"
+            },
+            {
+                feature: "Interactive Elements",
+                description: "Hover tooltips and clickable markers",
+                marks: 2,
+                justification: "Enhanced user experience",
+                route: "app.js"
+            },
+            {
+                feature: "Legend & Controls",
+                description: "Comprehensive legend and refresh button",
+                marks: 1,
+                justification: "Basic UI components",
+                route: "app.js"
+            },
+            {
+                feature: "Responsive Design",
+                description: "Adapts to different screen sizes",
+                marks: 1,
+                justification: "Modern web development standard",
+                route: "app.js"
+            },
+            {
+                feature: "Error Handling",
+                description: "Proper error handling and loading states",
+                marks: 1,
+                justification: "Robust application design",
+                route: "app.js"
+            },
+            {
+                feature: "Data Conversion Logic",
+                description: "Conversion from OpenWeatherMap to standard AQI",
+                marks: 1,
+                justification: "Data processing requirement",
+                route: "app.js"
+            }
+        ];
+
+        // Calculate totals
+        const totalFeatures = features.length;
+        const totalMarks = features.reduce((sum, feature) => sum + feature.marks, 0);
+        const percentage = Math.round((totalMarks / 15) * 100);
+
+        // Update summary card
+        d3.select("#total-features").text(totalFeatures);
+        d3.select("#total-marks").text(totalMarks);
+        d3.select("#percentage").text(percentage + "%");
+
+        // Create progress bar
+        d3.select(".summary-card")
+            .append("div")
+            .attr("class", "progress-bar")
+            .append("div")
+            .attr("class", "progress-fill")
+            .style("width", percentage + "%");
+
+        // Create table rows
+        const tableBody = d3.select("#features-table tbody");
+
+        tableBody.selectAll("tr")
+            .data(features)
+            .enter()
+            .append("tr")
+            .html(d => `
+                <td>${d.feature}</td>
+                <td>${d.description}</td>
+                <td class="marks-cell">${d.marks}</td>
+                <td>${d.justification}</td>
+                <td>${d.route}</td>
+            `);
+    </script>
+</body>
+</html>

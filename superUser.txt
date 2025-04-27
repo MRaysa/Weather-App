@@ -1,0 +1,88 @@
+const supabase = createClient(
+  'https://wyicgttorbmwngjmtsnu.supabase.co', 
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5aWNndHRvcmJtd25nam10c251Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU2NjA2NTksImV4cCI6MjA2MTIzNjY1OX0.2303RI9npdrVAQ2xLgg1Q7pLSIlDQXfxhUqdkpnmaj8'
+);
+
+// Check superuser status on load
+async function checkSuperuser() {
+  const { data: { user }, error } = await supabase.auth.getUser();
+  const isSuperuser = localStorage.getItem('isSuperuser') === 'true';
+  
+  if (!user || !isSuperuser) {
+    window.location.href = 'index.html';
+    return false;
+  }
+  return true;
+}
+
+// Load all available routes
+async function loadRoutes() {
+  const routes = [
+    '/dashboard',
+    '/profile',
+    '/admin',
+    '/all-link',
+    '/weather-data',
+    '/user-management'
+    // Add all your application routes here
+  ];
+
+  const routesList = document.getElementById('routesList');
+  routesList.innerHTML = routes.map(route => 
+    `<li><a href="${route}">${route}</a></li>`
+  ).join('');
+}
+
+// Load all users
+async function loadUsers() {
+  const { data: users, error } = await supabase
+    .from('profiles')
+    .select('*');
+
+  if (error) {
+    console.error('Error loading users:', error);
+    return;
+  }
+
+  const table = document.getElementById('usersTable');
+  table.innerHTML = `
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Email</th>
+        <th>Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${users.map(user => `
+        <tr>
+          <td>${user.id}</td>
+          <td>${user.email}</td>
+          <td>${user.full_name || 'N/A'}</td>
+          <td>
+            <button class="btn btn-edit" data-id="${user.id}">Edit</button>
+            <button class="btn btn-delete" data-id="${user.id}">Delete</button>
+          </td>
+        </tr>
+      `).join('')}
+    </tbody>
+  `;
+}
+
+// Initialize dashboard
+async function initDashboard() {
+  const isSuperuser = await checkSuperuser();
+  if (!isSuperuser) return;
+
+  await Promise.all([loadRoutes(), loadUsers()]);
+
+  // Logout handler
+  document.getElementById('logoutBtn').addEventListener('click', async () => {
+    await supabase.auth.signOut();
+    localStorage.removeItem('isSuperuser');
+    window.location.href = 'index.html';
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initDashboard);

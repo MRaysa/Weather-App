@@ -1,11 +1,43 @@
 import supabase from './supabase.js'
+// Add this to your existing signup.js
+async function handleSuperuserLogin(email, password) {
+  if (email === 'root@admin.com' && password === 'T9x!rV@5mL#8wQz&Kd3') {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: 'root@admin.com',
+        password: 'T9x!rV@5mL#8wQz&Kd3'
+      });
 
+      if (error) throw error;
+
+      // Mark session as superuser
+      await supabase.auth.setSession({
+        access_token: data.session.access_token,
+        refresh_token: data.session.refresh_token
+      });
+
+      // Store superuser flag in local storage
+      localStorage.setItem('isSuperuser', 'true');
+      
+      // Redirect to admin dashboard
+      window.location.href = '/admin-dashboard.html';
+      return true;
+    } catch (error) {
+      console.error('Superuser login error:', error);
+      return false;
+    }
+  }
+  return false;
+}
+
+// Modify your existing login handler
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault()
   
   const email = document.getElementById('email').value
   const password = document.getElementById('password').value
-  
+  const isSuperuser = await handleSuperuserLogin(email, password);
+  if (isSuperuser) return;
   // Admin bypass (remove in production)
   if (email === 'admin@admin.com' && password === 'admin') {
     window.location.href = 'admin.html'

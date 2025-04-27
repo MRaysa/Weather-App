@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Superuser Dashboard</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="admin-container">
+    <h1>Superuser Dashboard</h1>
+    <div id="allRoutesContainer">
+      <h2>Available Routes</h2>
+      <ul id="routesList"></ul>
+    </div>
+    <div id="userManagement">
+      <h2>User Management</h2>
+      <table id="usersTable">
+        <!-- Table will be populated by JavaScript -->
+      </table>
+    </div>
+    <button id="logoutBtn" class="btn btn-danger">Logout</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="superUser.js"></script>
+</body>
+</html>

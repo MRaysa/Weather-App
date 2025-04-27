@@ -12,6 +12,37 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+        
+        const supabase = createClient(
+  'https://wyicgttorbmwngjmtsnu.supabase.co', 
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5aWNndHRvcmJtd25nam10c251Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU2NjA2NTksImV4cCI6MjA2MTIzNjY1OX0.2303RI9npdrVAQ2xLgg1Q7pLSIlDQXfxhUqdkpnmaj8'
+  )
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Check auth status
+            const { data: { user }, error } = await supabase.auth.getUser()
+            
+            if (error || !user) {
+                window.location.href = 'index.html'
+                return
+            }
+
+            // Load profile data
+            await loadProfileData(user)
+            
+        })
+
+        async function loadProfileData(user) {
+            
+            // Set profile picture (if available)
+            const profilePic = user.user_metadata?.avatar_url || 
+                             'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
+            
+                         document.getElementById('user-avatar').src = profilePic
+        }
+        </script>
     <style>
         :root {
             --primary: #3b82f6;
@@ -302,7 +333,7 @@
                             class="absolute left-0 mt-6 w-48 bg-white rounded-md shadow-lg py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                             <a href="./marksAysa.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Marks
                                 Aysa</a>
-                            <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Marks Zara</a>
+                            <a href="./Zara_marks.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Marks Zara</a>
                             <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Marks Hamim</a>
                             <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Marks Moon</a>
                         </div>
@@ -322,7 +353,7 @@
                         <div
                             class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                             <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Info Aysa</a>
-                            <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Info Zara</a>
+                            <a href="./zara_info.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Info Zara</a>
                             <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Info Hamim</a>
                             <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Info Moon</a>
                         </div>
