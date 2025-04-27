@@ -14,16 +14,16 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="module">
         import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-        
+
         const supabase = createClient(
-  'https://wyicgttorbmwngjmtsnu.supabase.co', 
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5aWNndHRvcmJtd25nam10c251Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU2NjA2NTksImV4cCI6MjA2MTIzNjY1OX0.2303RI9npdrVAQ2xLgg1Q7pLSIlDQXfxhUqdkpnmaj8'
-  )
+            'https://wyicgttorbmwngjmtsnu.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5aWNndHRvcmJtd25nam10c251Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU2NjA2NTksImV4cCI6MjA2MTIzNjY1OX0.2303RI9npdrVAQ2xLgg1Q7pLSIlDQXfxhUqdkpnmaj8'
+        )
 
         document.addEventListener('DOMContentLoaded', async () => {
             // Check auth status
             const { data: { user }, error } = await supabase.auth.getUser()
-            
+
             if (error || !user) {
                 window.location.href = 'index.html'
                 return
@@ -31,18 +31,18 @@
 
             // Load profile data
             await loadProfileData(user)
-            
+
         })
 
         async function loadProfileData(user) {
-            
+
             // Set profile picture (if available)
-            const profilePic = user.user_metadata?.avatar_url || 
-                             'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
-            
-                         document.getElementById('user-avatar').src = profilePic
+            const profilePic = user.user_metadata?.avatar_url ||
+                'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
+
+            document.getElementById('user-avatar').src = profilePic
         }
-        </script>
+    </script>
     <style>
         :root {
             --primary: #3b82f6;
@@ -310,15 +310,29 @@
                             </span>
                         </a>
                     </li>
-                    <li>
-                        <a href="/windyMap.html" class="nav-link text-white/90 hover:text-white font-medium px-1 py-2">
-                            <span class="flex items-center">
-                                <i class="fas fa-wind mr-2"></i>
-                                WindScape
-                            </span>
-                        </a>
-                    </li>
 
+                    <!-- Map Dropdown -->
+                    <li class="relative group">
+                        <button class="nav-link text-white font-medium px-1 py-6 flex items-center focus:outline-none">
+                            <span class="flex items-center">
+                                <i class="fas fa-map mr-2"></i>
+                                Map
+                                <i
+                                    class="fas fa-chevron-down ml-2 text-xs transition-transform group-hover:rotate-180"></i>
+                            </span>
+                        </button>
+                        <div
+                            class="absolute left-0 mt-6 w-48 bg-white rounded-md shadow-lg py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                            <a href="./windyMapAysa.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100"><span
+                                    class="flex items-center">
+                                    <i class="fas fa-wind mr-2"></i>
+                                    WindScape (Aysa)
+                                </span>
+                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Marks Zara</a>
+                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Marks Hamim</a>
+                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Marks Moon</a>
+                        </div>
+                    </li>
                     <!-- Marks Dropdown -->
                     <li class="relative group">
                         <button class="nav-link text-white font-medium px-1 py-6 flex items-center focus:outline-none">
@@ -333,7 +347,8 @@
                             class="absolute left-0 mt-6 w-48 bg-white rounded-md shadow-lg py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                             <a href="./marksAysa.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Marks
                                 Aysa</a>
-                            <a href="./Zara_marks.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Marks Zara</a>
+                            <a href="./Zara_marks.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Marks
+                                Zara</a>
                             <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Marks Hamim</a>
                             <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Marks Moon</a>
                         </div>
@@ -353,7 +368,8 @@
                         <div
                             class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                             <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Info Aysa</a>
-                            <a href="./zara_info.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Info Zara</a>
+                            <a href="./zara_info.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Info
+                                Zara</a>
                             <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Info Hamim</a>
                             <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Info Moon</a>
                         </div>
@@ -424,14 +440,34 @@
                             Average
                         </a>
                     </li>
-                    <li>
-                        <a href="/windyMap.html"
-                            class="flex items-center py-3 px-6 rounded-lg bg-white/10 text-white font-medium hover:bg-white/20 transition-all">
-                            <i class="fas fa-wind mr-4"></i>
-                            WindScape
-                        </a>
-                    </li>
 
+                    <!-- Map Marks Dropdown -->
+                    <li>
+                        <button
+                            class="mobile-dropdown-toggle flex items-center justify-between w-full py-3 px-6 rounded-lg bg-white/10 text-white font-medium hover:bg-white/20 transition-all">
+                            <span class="flex items-center">
+                                <i class="fas fa-map mr-4"></i>
+                                Map
+                            </span>
+                            <i class="fas fa-chevron-down transition-transform"></i>
+                        </button>
+                        <ul class="mobile-dropdown-content pl-8 mt-2 space-y-2 hidden">
+                            <li><a href="./windyMapAysa.html"
+                                    class="block py-2 px-4 rounded-lg bg-white/5 hover:bg-white/10"><i
+                                        class="fas fa-wind mr-4"></i>
+                                    WindScape (Aysa)</a>
+                            </li>
+                            <li><a href="#" class="block py-2 px-4 rounded-lg bg-white/5 hover:bg-white/10">Marks
+                                    Zara</a>
+                            </li>
+                            <li><a href="#" class="block py-2 px-4 rounded-lg bg-white/5 hover:bg-white/10">Marks
+                                    Hamim</a>
+                            </li>
+                            <li><a href="#" class="block py-2 px-4 rounded-lg bg-white/5 hover:bg-white/10">Marks
+                                    Moon</a>
+                            </li>
+                        </ul>
+                    </li>
                     <!-- Mobile Marks Dropdown -->
                     <li>
                         <button
