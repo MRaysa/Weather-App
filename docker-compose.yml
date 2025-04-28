@@ -6,8 +6,9 @@ services:
     ports:
       - "8000:80"
     environment:
-      SUPABASE_URL: https://lkirjepcrvbzctuwdqma.supabase.co
-      SUPABASE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxraXJqZXBjcnZiemN0dXdkcW1hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIxMDUzNjgsImV4cCI6MjA1NzY4MTM2OH0.ygiGNGJyL19mmp3SIKZ96ZNKgF9nS6dc4VwtsGsqKyk
+      SUPABASE_URL: 'https://wyicgttorbmwngjmtsnu.supabase.co'
+      SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5aWNndHRvcmJtd25nam10c251Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU2NjA2NTksImV4cCI6MjA2MTIzNjY1OX0.2303RI9npdrVAQ2xLgg1Q7pLSIlDQXfxhUqdkpnmaj8'
+
     networks:
       - app_network
 
