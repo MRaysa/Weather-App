@@ -4,8 +4,8 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 // Rest of your code...
 document.addEventListener('DOMContentLoaded', function () {
 // Initialize Supabase client
-const supabaseUrl = 'postgresql://postgres:[CSE309WebApp]@db.lkirjepcrvbzctuwdqma.supabase.co:5432/postgres';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxraXJqZXBjcnZiemN0dXdkcW1hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIxMDUzNjgsImV4cCI6MjA1NzY4MTM2OH0.ygiGNGJyL19mmp3SIKZ96ZNKgF9nS6dc4VwtsGsqKyk';
+const supabaseUrl = 'https://wyicgttorbmwngjmtsnu.supabase.co';
+const supabaseKey =   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5aWNndHRvcmJtd25nam10c251Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU2NjA2NTksImV4cCI6MjA2MTIzNjY1OX0.2303RI9npdrVAQ2xLgg1Q7pLSIlDQXfxhUqdkpnmaj8';
 const supabase = createClient(supabaseUrl, supabaseKey);
   // Login Form Submission
   document.getElementById('login-form').addEventListener('submit', async function (e) {
