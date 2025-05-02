@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Info | WindScape</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/weather-logo.png">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .info-card {
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-gray-50">
+    <!-- Navigation -->
+    <!-- Navigation -->
+    <nav
+        class="fixed top-0 w-full z-50 py-3 bg-gradient-to-r from-blue-600/90 via-cyan-500/90 to-teal-400/90 shadow-lg backdrop-blur-md">
+        <div class="container mx-auto px-4 md:px-16 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <img src="weather-logo.png" alt="Weather App Logo" class="h-10 drop-shadow-md">
+                <span class="text-white font-bold text-xl hidden sm:block">WindScape</span>
+            </div>
+
+            <ul class="hidden md:flex space-x-8">
+                <li>
+                    <a href="./dashboard.html" class="relative text-white font-medium px-1 py-2 group">
+                        <span class="flex items-center">
+                            <i class="fas fa-home mr-2"></i>
+                            Home
+                        </span>
+                        <span
+                            class="absolute bottom-0 left-0 w-full h-0.5 bg-white scale-x-100 origin-left transition-transform duration-300"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="./average.html"
+                        class="relative text-white/90 hover:text-white font-medium px-1 py-2 group">
+                        <span class="flex items-center">
+                            <i class="fas fa-chart-line mr-2"></i>
+                            Average
+                        </span>
+                        <span
+                            class="absolute bottom-0 left-0 w-full h-0.5 bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300"></span>
+                    </a>
+                </li>
+
+                <!-- Map Dropdown -->
+                <li class="relative group">
+                    <button class="nav-link text-white font-medium px-1 py-6 flex items-center focus:outline-none">
+                        <span class="flex items-center">
+                            <i class="fas fa-map mr-2"></i>
+                            Map
+                            <i class="fas fa-chevron-down ml-2 text-xs transition-transform group-hover:rotate-180"></i>
+                        </span>
+                    </button>
+                    <div
+                        class="absolute left-0 mt-6 w-48 bg-white rounded-md shadow-lg py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        <a href="./windyMapAysa.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100"><span
+                                class="flex items-center">
+                                <i class="fas fa-wind mr-2"></i>
+                                WindScape- Windy Map (Aysa)
+                            </span>
+                            <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Map Zara</a>
+                            <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Map Hamim</a>
+                            <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Map Moon</a>
+                    </div>
+                </li>
+                <!-- Marks Dropdown -->
+                <li class="relative group">
+                    <button class="nav-link text-white font-medium px-1 py-6 flex items-center focus:outline-none">
+                        <span class="flex items-center">
+                            <i class="fas fa-table mr-2"></i>
+                            Marks
+                            <i class="fas fa-chevron-down ml-2 text-xs transition-transform group-hover:rotate-180"></i>
+                        </span>
+                    </button>
+                    <div
+                        class="absolute left-0 mt-6 w-48 bg-white rounded-md shadow-lg py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        <a href="./marksAysa.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Marks
+                            Aysa</a>
+                        <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Marks Zara</a>
+                        <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Marks Hamim</a>
+                        <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Marks Moon</a>
+                    </div>
+                </li>
+
+                <!-- Info Dropdown -->
+                <li class="relative group">
+                    <button
+                        class="nav-link text-white/90 hover:text-white font-medium px-1 py-6 flex items-center focus:outline-none">
+                        <span class="flex items-center">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            Info
+                            <i class="fas fa-chevron-down ml-2 text-xs transition-transform group-hover:rotate-180"></i>
+                        </span>
+                    </button>
+                    <div
+                        class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        <a href="./infoAysa.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Info Aysa</a>
+                        <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Info Zara</a>
+                        <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Info Hamim</a>
+                        <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Info Moon</a>
+                    </div>
+                </li>
+
+                <li>
+                    <a href="./index.html" class="relative text-white/90 hover:text-white font-medium px-1 py-2 group">
+                        <span class="flex items-center">
+                            <i class="fas fa-sign-out-alt mr-2"></i>
+                            Logout
+                        </span>
+                        <span
+                            class="absolute bottom-0 left-0 w-full h-0.5 bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300"></span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="flex items-center space-x-4">
+                <div class="relative group">
+                    <a href="./profile.html" class="block">
+                        <img alt="User Avatar"
+                            src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                            class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-lg hover:scale-110 transition-transform">
+                        <span
+                            class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></span>
+                    </a>
+                </div>
+
+                <button class="md:hidden text-white focus:outline-none" id="hamburger">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="md:hidden fixed inset-0 bg-black/70 z-40 pt-20 hidden" id="mobileMenu">
+            <div class="bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-400 p-6 shadow-xl backdrop-blur-md">
+                <ul class="space-y-6">
+                    <li>
+                        <a href="./dashboard.html"
+                            class="flex items-center py-3 px-6 rounded-lg bg-white/10 text-white font-medium hover:bg-white/20 transition-all">
+                            <i class="fas fa-home mr-4"></i>
+                            Home
+                        </a>
+                    </li>
+                    <li>
+                        <a href="./average.html"
+                            class="flex items-center py-3 px-6 rounded-lg bg-white/10 text-white font-medium hover:bg-white/20 transition-all">
+                            <i class="fas fa-chart-line mr-4"></i>
+                            Average
+                        </a>
+                    </li>
+
+                    <!-- Map Marks Dropdown -->
+                    <li>
+                        <button
+                            class="mobile-dropdown-toggle flex items-center justify-between w-full py-3 px-6 rounded-lg bg-white/10 text-white font-medium hover:bg-white/20 transition-all">
+                            <span class="flex items-center">
+                                <i class="fas fa-map mr-4"></i>
+                                Map
+                            </span>
+                            <i class="fas fa-chevron-down transition-transform"></i>
+                        </button>
+                        <ul class="mobile-dropdown-content pl-8 mt-2 space-y-2 hidden">
+                            <li><a href="./windyMapAysa.html"
+                                    class="block py-2 px-4 rounded-lg bg-white/5 hover:bg-white/10"><i
+                                        class="fas fa-wind mr-4"></i>
+                                    WindScape (Aysa)</a>
+                            </li>
+                            <li><a href="#" class="block py-2 px-4 rounded-lg bg-white/5 hover:bg-white/10">Map
+                                    Zara</a>
+                            </li>
+                            <li><a href="#" class="block py-2 px-4 rounded-lg bg-white/5 hover:bg-white/10">Map
+                                    Hamim</a>
+                            </li>
+                            <li><a href="#" class="block py-2 px-4 rounded-lg bg-white/5 hover:bg-white/10">Map
+                                    Moon</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Mobile Marks Dropdown -->
+                    <li>
+                        <button
+                            class="mobile-dropdown-toggle flex items-center justify-between w-full py-3 px-6 rounded-lg bg-white/10 text-white font-medium hover:bg-white/20 transition-all">
+                            <span class="flex items-center">
+                                <i class="fas fa-table mr-4"></i>
+                                Marks
+                            </span>
+                            <i class="fas fa-chevron-down transition-transform"></i>
+                        </button>
+                        <ul class="mobile-dropdown-content pl-8 mt-2 space-y-2 hidden">
+                            <li><a href="./marksAysa.html"
+                                    class="block py-2 px-4 rounded-lg bg-white/5 hover:bg-white/10">Marks
+                                    Aysa</a>
+                            </li>
+                            <li><a href="#" class="block py-2 px-4 rounded-lg bg-white/5 hover:bg-white/10">Marks
+                                    Zara</a>
+                            </li>
+                            <li><a href="#" class="block py-2 px-4 rounded-lg bg-white/5 hover:bg-white/10">Marks
+                                    Hamim</a>
+                            </li>
+                            <li><a href="#" class="block py-2 px-4 rounded-lg bg-white/5 hover:bg-white/10">Marks
+                                    Moon</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- Mobile Info Dropdown -->
+                    <li>
+                        <button
+                            class="mobile-dropdown-toggle flex items-center justify-between w-full py-3 px-6 rounded-lg bg-white/10 text-white font-medium hover:bg-white/20 transition-all">
+                            <span class="flex items-center">
+                                <i class="fas fa-info-circle mr-4"></i>
+                                Info
+                            </span>
+                            <i class="fas fa-chevron-down transition-transform"></i>
+                        </button>
+                        <ul class="mobile-dropdown-content pl-8 mt-2 space-y-2 hidden">
+                            <li><a href="./infoAysa.html"
+                                    class="block py-2 px-4 rounded-lg bg-white/5 hover:bg-white/10">Info
+                                    Aysa</a>
+                            </li>
+                            <li><a href="#" class="block py-2 px-4 rounded-lg bg-white/5 hover:bg-white/10">Info
+                                    Zara</a>
+                            </li>
+                            <li><a href="#" class="block py-2 px-4 rounded-lg bg-white/5 hover:bg-white/10">Info
+                                    Hamim</a>
+                            </li>
+                            <li><a href="#" class="block py-2 px-4 rounded-lg bg-white/5 hover:bg-white/10">Info
+                                    Moon</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="./index.html"
+                            class="flex items-center py-3 px-6 rounded-lg bg-white/10 text-white font-medium hover:bg-white/20 transition-all">
+                            <i class="fas fa-sign-out-alt mr-4"></i>
+                            Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-12">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold  mb-4 text-blue-500">Personal Information</h1>
+            <p class="text-xl text-gray-600">All relevant details about the project and developer</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Personal Information Card -->
+            <div class="info-card bg-white rounded-xl shadow-lg overflow-hidden p-6">
+                <div class="flex items-center mb-6">
+                    <img src="./111111111.jpg" alt="Developer"
+                        class="w-16 h-16 rounded-full object-cover border-4 border-blue-100">
+                    <div class="ml-4">
+                        <h2 class="text-2xl font-bold text-gray-800">Mst. Aysa Siddika Meem</h2>
+                        <p class="text-blue-600">Developer</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex items-start">
+                        <div class="bg-blue-100 p-2 rounded-lg">
+                            <i class="fas fa-id-card text-blue-600"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-sm font-semibold text-gray-500">ID</h3>
+                            <p class="text-gray-800">2220281</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <div class="bg-blue-100 p-2 rounded-lg">
+                            <i class="fas fa-book text-blue-600"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-sm font-semibold text-gray-500">Personal Notion Page</h3>
+                            <a href="https://www.notion.so/Project-Report-Weather-App-Development-1ab5d49fd9ed807ba8b5c7319a5f8977"
+                                target="_blank" class="text-blue-600 hover:underline break-all">
+                                https://www.notion.so/Project-Report-Weather-App-Development-1ab5d49fd9ed807ba8b5c7319a5f8977
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <div class="bg-blue-100 p-2 rounded-lg">
+                            <i class="fas fa-users text-blue-600"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-sm font-semibold text-gray-500">Group Notion Page</h3>
+                            <a href="https://www.notion.so/4-1930c4a3a7b380abb898e2f155d0020b" target="_blank"
+                                class="text-blue-600 hover:underline break-all">
+                                https://www.notion.so/4-1930c4a3a7b380abb898e2f155d0020b
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <div class="bg-blue-100 p-2 rounded-lg">
+                            <i class="fab fa-github text-blue-600"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-sm font-semibold text-gray-500">GitHub ID</h3>
+                            <a href="https://github.com/MRaysa" target="_blank" class="text-blue-600 hover:underline">
+                                @MRaysa
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Information Card -->
+            <div class="info-card bg-white rounded-xl shadow-lg overflow-hidden p-6">
+                <div class="flex items-center mb-6">
+                    <img src="weather-logo.png" alt="WindScape Logo"
+                        class="w-16 h-16 rounded-xl object-cover border-4 border-blue-100">
+                    <div class="ml-4">
+                        <h2 class="text-2xl font-bold text-gray-800">WindScape</h2>
+                        <p class="text-blue-600">Weather Visualization Platform</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex items-start">
+                        <div class="bg-blue-100 p-2 rounded-lg">
+                            <i class="fas fa-star text-blue-600"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-sm font-semibold text-gray-500">Project Description</h3>
+                            <p class="text-gray-800">
+                                Advanced meteorological platform providing real-time weather data visualization,
+                                wind pattern analysis, and forecasting tools.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <div class="bg-blue-100 p-2 rounded-lg">
+                            <i class="fas fa-code-branch text-blue-600"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-sm font-semibold text-gray-500">GitHub Repository</h3>
+                            <a href="https://github.com/MRaysa/Weather-App" target="_blank"
+                                class="text-blue-600 hover:underline break-all">
+                                https://github.com/MRaysa/Weather-App
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <div class="bg-blue-100 p-2 rounded-lg">
+                            <i class="fas fa-code text-blue-600"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-sm font-semibold text-gray-500">Technologies Used</h3>
+                            <div class="flex flex-wrap gap-2 mt-1">
+                                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                                    <i class="fab fa-html5 mr-1"></i>HTML5
+                                </span>
+                                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                                    <i class="fab fa-css3-alt mr-1"></i>CSS3
+                                </span>
+                                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                                    <i class="fab fa-js-square mr-1"></i>JavaScript
+                                </span>
+                                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                                    <i class="fas fa-chart-line mr-1"></i>D3.js
+                                </span>
+                                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                                    <i class="fas fa-paint-brush mr-1"></i>Tailwind CSS
+                                </span>
+                                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                                    <i class="fas fa-map-marked-alt mr-1"></i>Mapbox GL
+                                </span>
+                                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                                    <i class="fas fa-cloud mr-1"></i>OpenWeatherAPI
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <div class="bg-blue-100 p-2 rounded-lg">
+                            <i class="fas fa-calendar-alt text-blue-600"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-sm font-semibold text-gray-500">Last Updated</h3>
+                            <p class="text-gray-800">June 15, 2025</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer pt-16 pb-8 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col items-center text-center">
+                <div class="mb-8">
+                    <div class="flex items-center justify-center mb-4">
+                        <span class="text-2xl font-bold gradient-text flex items-center text-blue-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                            </svg>
+                            WeatherScape
+                        </span>
+                    </div>
+                    <p class="text-gray-600 mb-6 max-w-md mx-auto">
+                        Advanced meteorological platform providing real-time weather data and visualization tools.
+                    </p>
+                    <div class="flex justify-center space-x-4 mb-8">
+                        <a href="#" class="text-gray-500 hover:text-blue-500 transition-colors">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="https://www.facebook.com/share/1Bq1jUpepp/"
+                            class="text-gray-500 hover:text-blue-600 transition-colors">
+                            <i class="fab fa-facebook text-xl"></i>
+                        </a>
+
+                        <a href="https://github.com/MRaysa" class="text-gray-500 hover:text-gray-800 transition-colors">
+                            <i class="fab fa-github text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-bottom pt-8 mt-8 border-t border-gray-200 w-full">
+                    <div class="flex flex-col items-center space-y-2">
+                        <p class="text-gray-500 text-sm">
+                            &copy; 2025 WindScape. All rights reserved.
+                        </p>
+                        <p class="text-gray-500 text-sm">
+                            Developed by <span class="text-gray-700 font-medium">Mst. Aysa Siddika Meem</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle functionality
+        document.getElementById('hamburger').addEventListener('click', function () {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Mobile dropdown functionality
+        document.querySelectorAll('.mobile-dropdown-toggle').forEach(button => {
+            button.addEventListener('click', function () {
+                const dropdownContent = this.nextElementSibling;
+                const icon = this.querySelector('.fa-chevron-down');
+
+                dropdownContent.classList.toggle('hidden');
+                icon.classList.toggle('rotate-180');
+
+                // Close other open dropdowns
+                document.querySelectorAll('.mobile-dropdown-content').forEach(content => {
+                    if (content !== dropdownContent && !content.classList.contains('hidden')) {
+                        content.classList.add('hidden');
+                        const otherIcon = content.previousElementSibling.querySelector('.fa-chevron-down');
+                        otherIcon.classList.remove('rotate-180');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
