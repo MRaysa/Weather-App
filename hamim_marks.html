@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TempHeat Evaluation</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-light: #e0e7ff;
+      --secondary: #3f37c9;
+      --success: #4cc9f0;
+      --text: #2b2d42;
+      --text-light: #8d99ae;
+      --bg: #f8f9fa;
+      --card-bg: #ffffff;
+      --border: #e9ecef;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+
+    .container {
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      padding: 2.5rem;
+      max-width: 1100px;
+      margin: 2rem auto;
+      border: 1px solid var(--border);
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      font-size: 2.2rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--text-light);
+      margin-bottom: 2rem;
+      font-weight: 400;
+      font-size: 1.1rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-top: 1.5rem;
+      overflow: hidden;
+    }
+
+    th,
+    td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background: var(--primary-light);
+      font-weight: 600;
+      color: var(--primary);
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+    }
+
+    tr:hover {
+      background-color: rgba(67, 97, 238, 0.03);
+    }
+
+    .marks {
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .summary {
+      display: flex;
+      justify-content: space-around;
+      background: linear-gradient(135deg, var(--primary-light) 0%, #f0f7ff 100%);
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-top: 2.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    .summary-item {
+      text-align: center;
+      padding: 0 1.5rem;
+      position: relative;
+    }
+
+    .summary-item:not(:last-child):after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 50%;
+      width: 1px;
+      background: rgba(67, 97, 238, 0.2);
+    }
+
+    .summary-label {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .summary-value {
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 1.6rem;
+    }
+
+    .percentage {
+      color: #10b981;
+      font-weight: 700;
+      font-size: 1.8rem;
+    }
+
+    .route-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      display: inline-block;
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      background: rgba(67, 97, 238, 0.1);
+    }
+
+    .route-link:hover {
+      background: rgba(67, 97, 238, 0.2);
+      transform: translateY(-1px);
+    }
+
+    .feature-icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 8px;
+      vertical-align: middle;
+      opacity: 0.8;
+    }
+
+    .justification {
+      color: var(--text-light);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem;
+        margin: 1rem;
+      }
+
+      .summary {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .summary-item:after {
+        display: none;
+      }
+
+      table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>TempHeat Evaluation</h1>
+    <p class="subtitle">Detailed assessment of application features (Total Marks: 15)</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Description</th>
+          <th>Marks</th>
+          <th>Justification</th>
+          <th>Route</th>
+        </tr>
+      </thead>
+      <tbody id="features-body"></tbody>
+    </table>
+    <div class="summary">
+      <div class="summary-item">
+        <div class="summary-label">Total Features</div>
+        <div class="summary-value">7</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">Total Marks</div>
+        <div class="summary-value">15/15</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">Percentage</div>
+        <div class="percentage">100%</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const data = [
+      {
+        feature: "Real-Time Temperature Display",
+        description: "Live temperature data with current readings, trends, and visual indicators",
+        marks: "3",
+        justification: "Clear temperature metrics displayed effectively using visuals with intuitive design",
+        route: "/#realtime-temp"
+      },
+      {
+        feature: "Temperature Graphs",
+        description: "Interactive charts showing temperature changes over time with animated lines and data points",
+        marks: "3",
+        justification: "Strong visual representation of temperature trends with smooth real-time updates",
+        route: "/#temperature-graphs"
+      },
+      {
+        feature: "Location-Based Temperature",
+        description: "Searchable temperature display by city or coordinates with auto-suggestions",
+        marks: "1",
+        justification: "Location-specific temperature view with intuitive search interface",
+        route: "/#location-temp"
+      },
+      {
+        feature: "Temperature Forecast",
+        description: "24-hour and 7-day temperature forecast with interactive toggle between views",
+        marks: "2",
+        justification: "Clear forecast presentation with granular breakdowns and chart interactivity",
+        route: "/#forecast-temp"
+      },
+      {
+        feature: "Interactive Temp Map",
+        description: "Temperature heatmap with timeline controls, zoom, and geographic data overlays",
+        marks: "3",
+        justification: "Engaging and informative temperature visualization with smooth interactions",
+        route: "/#temp-map"
+      },
+      {
+        feature: "Navigation System",
+        description: "Responsive navbar optimized for all devices with intuitive menu structure",
+        marks: "1",
+        justification: "Seamless navigation experience across all device sizes",
+        route: "Top of all pages"
+      },
+      {
+        feature: "UI/UX Design",
+        description: "Overall user interface and experience for temperature monitoring application",
+        marks: "2",
+        justification: "Clean, modern design with effective use of color hierarchy and typography",
+        route: "Entire application"
+      }
+    ];
+
+    const tbody = d3.select("#features-body");
+
+    tbody.selectAll("tr")
+      .data(data)
+      .enter()
+      .append("tr")
+      .html(d => `
+        <td><strong>${d.feature}</strong></td>
+        <td>${d.description}</td>
+        <td class="marks">${d.marks}/15</td>
+        <td class="justification">${d.justification}</td>
+        <td><a class="route-link" href="${d.route}">${d.route}</a></td>
+      `);
+  </script>
+</body>
+
+</html>
