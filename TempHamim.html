@@ -1,0 +1,1815 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Forecast Heatmap</title>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet" />
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body, html { 
+      margin: 0; 
+      padding: 0; 
+      height: 100%; 
+      font-family: Arial, sans-serif; 
+    }
+
+    #map { 
+      width: 100%; 
+      height: 100vh; 
+    }
+
+    /* Controls */
+    .controls {
+      position: absolute;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Navbar */
+    .navbar {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      z-index: 2;
+      box-sizing: border-box;
+    }
+
+    .nav-left { 
+      font-size: 18px;
+    }
+
+    .nav-right { 
+      display: flex; 
+      gap: 10px;
+    }
+
+    .nav-right input[type="text"] {
+      padding: 5px;
+      border-radius: 3px;
+      border: none;
+      outline: none;
+      width: 200px;
+    }
+
+    .nav-right button {
+      padding: 5px 10px;
+      background: #00bcd4;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .nav-right button:hover { 
+      background: #0097a7; 
+    }
+
+    /* Legend */
+    .legend {
+      position: absolute;
+      bottom: 120px;
+      left: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      z-index: 2;
+    }
+
+    .legend-gradient {
+      width: 200px;
+      height: 10px;
+      margin: 5px 0;
+      border-radius: 5px;
+    }
+
+    .legend-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
+      font-size: 10px;
+    }
+
+    /* Toggle Mode */
+    .toggle-mode {
+      position: absolute;
+      top: 80px;
+      right: 20px;
+      background: #00bcd4;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .toggle-mode:hover { 
+      background: #0097a7; 
+    }
+
+    /* Feedback Button */
+    .feedback-btn {
+      position: absolute;
+      bottom: 200px;
+      left: 20px;
+      padding: 10px 15px;
+      background: #00bcd4;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    /* Action Buttons */
+    .action-btn {
+      position: absolute;
+      left: 20px;
+      padding: 10px 15px;
+      background: #00bcd4;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .saved-locations-btn {
+      bottom: 260px;
+    }
+
+    .hourly-btn {
+      bottom: 320px;
+    }
+
+    .feedback-btn:hover, 
+    .action-btn:hover { 
+      background: #0097a7; 
+    }
+
+    /* Feedback Modal */
+    .feedback-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 5;
+    }
+
+    .feedback-card {
+      background: #fff;
+      width: 400px;
+      max-width: 90%;
+      margin: 80px auto;
+      padding: 20px;
+      border-radius: 10px;
+      position: relative;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+
+    .feedback-card h2 { 
+      margin-top: 0; 
+    }
+
+    .feedback-card p { 
+      color: #555; 
+      font-size: 14px; 
+    }
+
+    .feedback-card input, 
+    .feedback-card textarea {
+      width: 100%;
+      margin: 10px 0;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    .feedback-card textarea { 
+      resize: vertical; 
+      height: 80px; 
+    }
+
+    .feedback-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .feedback-actions button {
+      background: #00bcd4;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .feedback-actions .cancel-btn { 
+      background: #ccc; 
+      color: #333; 
+    }
+
+    .feedback-actions button:hover { 
+      opacity: 0.9; 
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      cursor: pointer;
+      font-size: 20px;
+      color: #333;
+    }
+
+    /* Timeline */
+    .timeline-container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      z-index: 1;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+    }
+
+    .timeline {
+      display: flex;
+      gap: 15px;
+      overflow-x: auto;
+      padding: 5px;
+    }
+
+    .timeline-day {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 60px;
+      cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 5px;
+      transition: background 0.2s;
+    }
+
+    .timeline-day:hover { 
+      background: rgba(0, 0, 0, 0.1); 
+    }
+
+    .timeline-day.active { 
+      background: #00bcd4; 
+      color: white; 
+    }
+
+    .timeline-dayname { 
+      font-weight: bold; 
+      font-size: 14px; 
+    }
+
+    .timeline-date { 
+      font-size: 12px; 
+    }
+
+    /* Temperature Display */
+    .temperature-display {
+      position: absolute;
+      top: 80px;
+      left: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 5px;
+      z-index: 2;
+      font-size: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .temperature-value { 
+      font-size: 24px; 
+      font-weight: bold; 
+    }
+
+    .temperature-time { 
+      font-size: 14px; 
+      opacity: 0.8; 
+    }
+
+    /* Loading */
+    .loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 20px;
+      border-radius: 5px;
+      z-index: 10;
+      display: none;
+    }
+
+    /* Footer */
+    .footer {
+      position: absolute;
+      bottom: 5px;
+      right: 10px;
+      color: #666;
+      font-size: 10px;
+      z-index: 2;
+      background: rgba(172, 217, 225, 0.7);
+      padding: 2px 5px;
+      border-radius: 3px;
+    }
+
+    /* Layer Controls */
+    .layer-controls {
+      position: absolute;
+      top: 120px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      z-index: 2;
+      max-width: 200px;
+    }
+
+    .layer-controls h3 {
+      margin: 0 0 10px 0;
+      font-size: 14px;
+    }
+
+    .layer-option {
+      margin: 5px 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .layer-option input {
+      margin-right: 8px;
+    }
+
+    /* Unit Toggle */
+    .unit-toggle {
+      position: absolute;
+      top: 140px;
+      left: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* Hourly Forecast */
+    .hourly-forecast {
+      position: absolute;
+      bottom: 120px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.9);
+      padding: 10px;
+      border-radius: 5px;
+      z-index: 2;
+      display: none;
+      max-width: 90%;
+      overflow-x: auto;
+      white-space: nowrap;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+
+    .hourly-item {
+      display: inline-block;
+      padding: 0 10px;
+      text-align: center;
+      border-right: 1px solid #ddd;
+    }
+
+    .hourly-item:last-child {
+      border-right: none;
+    }
+
+    .hourly-time {
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    .hourly-temp {
+      font-size: 14px;
+      margin: 5px 0;
+    }
+
+    .hourly-icon {
+      width: 30px;
+      height: 30px;
+    }
+
+    /* Saved Locations */
+    .saved-locations {
+      position: absolute;
+      top: 160px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      z-index: 2;
+      max-height: 300px;
+      overflow-y: auto;
+      width: 200px;
+      display: none;
+    }
+
+    .saved-location {
+      padding: 5px;
+      margin: 5px 0;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+
+    .saved-location:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .save-location-btn {
+      margin-top: 10px;
+      width: 100%;
+      background: #00bcd4;
+      color: white;
+      border: none;
+      padding: 8px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .save-location-btn:hover {
+      background: #0097a7;
+    }
+
+    /* Alert Banner */
+    .alert-banner {
+      position: absolute;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(214, 69, 65, 0.9);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      z-index: 10;
+      display: none;
+      max-width: 80%;
+      text-align: center;
+    }
+
+    /* Weather Details */
+    .weather-details {
+      position: absolute;
+      top: 180px;
+      left: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      z-index: 2;
+      font-size: 14px;
+      display: none;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 5px 0;
+    }
+
+    .detail-label {
+      color: #ccc;
+      margin-right: 10px;
+    }
+
+    /* Hover Temperature */
+    .hover-temperature {
+      position: absolute;
+      padding: 5px 10px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      border-radius: 5px;
+      pointer-events: none;
+      z-index: 10;
+      font-size: 14px;
+      transform: translate(-50%, -100%);
+      display: none;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 600px) {
+      .navbar { 
+        flex-direction: column; 
+        align-items: flex-start; 
+      }
+      
+      .nav-right { 
+        width: 100%; 
+        justify-content: space-between; 
+        margin-top: 10px; 
+      }
+      
+      .controls { 
+        bottom: 100px; 
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .legend { 
+        bottom: 180px; 
+      }
+      
+      .feedback-btn { 
+        bottom: 220px; 
+      }
+      
+      .saved-locations-btn {
+        bottom: 260px;
+      }
+      
+      .hourly-btn {
+        bottom: 300px;
+      }
+      
+      .hourly-forecast {
+        max-width: 95%;
+      }
+      
+      .temperature-display,
+      .unit-toggle,
+      .weather-details {
+        left: 10px;
+        padding: 8px;
+      }
+      
+      .layer-controls {
+        max-width: 160px;
+        right: 10px;
+      }
+    }
+
+    /* Temperature overlay */
+    .temperature-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      z-index: 1;
+      mix-blend-mode: multiply;
+      opacity: 0.3;
+      background: linear-gradient(45deg, rgba(0,0,255,0.2), rgba(255,0,0,0.2));
+    }
+
+    /* Update hover temperature styles */
+    .hover-temperature {
+      position: absolute;
+      padding: 10px 15px;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      border-radius: 8px;
+      pointer-events: none;
+      z-index: 10;
+      font-size: 14px;
+      transform: translate(-50%, -120%);
+      display: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      text-align: center;
+      min-width: 120px;
+    }
+
+    .hover-temperature strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 16px;
+    }
+
+    .hover-temperature span {
+      display: block;
+      margin-top: 2px;
+      font-size: 12px;
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <!-- Add this right after the map container div -->
+  <div id="map"></div>
+  <div class="temperature-overlay"></div>
+
+  <!-- Hover temperature display -->
+  <div class="hover-temperature" id="hoverTemperature"></div>
+
+  <!-- Temperature Display -->
+  <div class="temperature-display">
+    <div class="temperature-value">--°C</div>
+    <div class="temperature-time">--:-- --</div>
+  </div>
+
+  <!-- Weather Details -->
+  <div class="weather-details" id="weatherDetails">
+    <h3>Weather Details</h3>
+    <div class="detail-row">
+      <span class="detail-label">Feels Like:</span>
+      <span id="feelsLike">--</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label">Humidity:</span>
+      <span id="humidity">--</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label">Wind:</span>
+      <span id="wind">--</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label">UV Index:</span>
+      <span id="uvIndex">--</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label">Visibility:</span>
+      <span id="visibility">--</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label">Pressure:</span>
+      <span id="pressure">--</span>
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="timeline-container">
+    <div class="timeline" id="timeline"></div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">© 2025 WeatherMap, © 2025 Mapbox</div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <label for="forecastSlider">Forecast Day: </label>
+    <input type="range" min="0" max="3" value="0" id="forecastSlider">
+    <span id="dayLabel">Now</span>
+    <button id="playPauseBtn">▶️</button>
+  </div>
+
+  <!-- Toggle Mode -->
+  <button class="toggle-mode" id="dayNightToggle">🌙</button>
+
+  <!-- Temperature Unit Toggle -->
+  <div class="unit-toggle" id="tempUnitToggle">
+    <span id="tempUnit">°C</span>
+    <i class="fas fa-exchange-alt"></i>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-title">Temperature (°C)</div>
+    <div class="legend-gradient"></div>
+    <div class="legend-labels"></div>
+  </div>
+
+  <!-- Layer Controls -->
+  <div class="layer-controls">
+    <h3>Map Layers</h3>
+    <div class="layer-option">
+      <input type="checkbox" id="tempLayer" checked>
+      <label for="tempLayer">Temperature</label>
+    </div>
+    <div class="layer-option">
+      <input type="checkbox" id="precipLayer">
+      <label for="precipLayer">Precipitation</label>
+    </div>
+    <div class="layer-option">
+      <input type="checkbox" id="windLayer">
+      <label for="windLayer">Wind</label>
+    </div>
+    <div class="layer-option">
+      <input type="checkbox" id="aqiLayer">
+      <label for="aqiLayer">Air Quality</label>
+    </div>
+  </div>
+
+  <!-- Feedback Button -->
+  <button class="feedback-btn" id="feedbackBtn">📝 Feedback</button>
+
+  <!-- Action Buttons -->
+  <button class="action-btn saved-locations-btn" id="savedLocationsBtn">
+    <i class="fas fa-bookmark"></i> Saved
+  </button>
+  <button class="action-btn hourly-btn" id="hourlyBtn">
+    <i class="fas fa-clock"></i> Hourly
+  </button>
+
+  <!-- Hourly Forecast -->
+  <div class="hourly-forecast" id="hourlyForecast"></div>
+  
+  <!-- Saved Locations -->
+  <div class="saved-locations" id="savedLocations">
+    <h3>Saved Locations</h3>
+    <div id="savedLocationsList"></div>
+    <button id="saveLocationBtn" class="save-location-btn">
+      <i class="fas fa-bookmark"></i> Save Current Location
+    </button>
+  </div>
+
+  <!-- Alert Banner -->
+  <div class="alert-banner" id="weatherAlert"></div>
+
+  <!-- Feedback Modal -->
+  <div id="feedbackPopup" class="feedback-modal">
+    <div class="feedback-card">
+      <span class="close-btn" id="closeFeedbackBtn">&times;</span>
+      <h2>Send Feedback</h2>
+      <p>We value your feedback to improve the application experience.</p>
+      <input type="text" id="fbName" placeholder="Your Name" required>
+      <input type="email" id="fbEmail" placeholder="Your Email" required>
+      <textarea id="fbMessage" placeholder="Your Message" required></textarea>
+      <div class="feedback-actions">
+        <button id="submitFeedbackBtn">Submit</button>
+        <button class="cancel-btn" id="cancelFeedbackBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="nav-left">🌡️ <strong>Temperature Map</strong></div>
+    <div class="nav-right">
+      <input type="text" id="searchBox" placeholder="Enter city name">
+      <button id="searchBtn">Search</button>
+    </div>
+  </div>
+
+  <!-- Loading Indicator -->
+  <div id="loading" class="loading">Loading data...</div>
+
+  <script>
+    // Configuration constants for the application
+    const CONFIG = {
+      // API keys and endpoints
+      MAPBOX_ACCESS_TOKEN: "pk.eyJ1IjoiYXlzYSIsImEiOiJjbTkwYXNidzYwajlrMmpzZHk1OWM4Zjk1In0.-4Im1sYjHHWGokgOrFw-qg",
+      WEATHER_API_KEY: "1dec1896e77e4da5b0c195326251603",
+      WEATHER_API_URL: "https://api.weatherapi.com/v1",
+      
+      // Map configuration
+      DEFAULT_CENTER: [90.4125, 23.8103], // Dhaka
+      DEFAULT_ZOOM: 5,
+      
+      // Temperature range for color scale
+      TEMP_MIN: -10,
+      TEMP_MAX: 40,
+      
+      // Default cities if API fails
+      DEFAULT_CITIES: [
+        { name: "Dhaka", lat: 23.8103, lon: 90.4125 },
+        { name: "Chittagong", lat: 22.3569, lon: 91.7832 },
+        { name: "Rajshahi", lat: 24.3745, lon: 88.6042 },
+        { name: "Khulna", lat: 22.8456, lon: 89.5403 },
+        { name: "Barisal", lat: 22.7010, lon: 90.3535 },
+        { name: "Sylhet", lat: 24.8949, lon: 91.8687 },
+        { name: "Rangpur", lat: 25.7439, lon: 89.2752 },
+        { name: "Cox's Bazar", lat: 21.4272, lon: 92.0058 }
+      ]
+    };
+
+    // Global state
+    let map;
+    let marker;
+    let isDay = false;
+    let isPlaying = false;
+    let playInterval;
+    let cities = [];
+    let forecastData = {};
+    let hourlyForecastData = null;
+    let currentLocation = null;
+    let useCelsius = true;
+    const colorScale = createColorScale();
+    let activeLayers = {
+      temperature: true,
+      precipitation: false,
+      wind: false,
+      aqi: false
+    };
+    let savedLocations = loadSavedLocations();
+
+    // Main application entry point
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize map
+      initMap();
+      
+      // Initialize UI elements
+      initUI();
+    });
+
+    // Utility functions
+    function createColorScale() {
+      return d3.scaleSequential()
+        .domain([CONFIG.TEMP_MIN, CONFIG.TEMP_MAX])
+        .interpolator(d3.interpolateRgbBasis([
+          '#313695', // Deep blue (very cold)
+          '#4575b4', // Blue (cold)
+          '#74add1', // Light blue (cool)
+          '#abd9e9', // Very light blue
+          '#e0f3f8', // Pale blue
+          '#ffffbf', // Yellow (neutral)
+          '#fee090', // Light orange
+          '#fdae61', // Orange (warm)
+          '#f46d43', // Red-orange (hot)
+          '#d73027', // Red (very hot)
+          '#a50026'  // Dark red (extremely hot)
+        ]));
+    }
+
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return {
+        dayName: date.toLocaleDateString('en-US', { weekday: 'short' }),
+        dayNumber: date.getDate(),
+        fullDate: date.toLocaleDateString('en-US', { 
+          weekday: 'short', 
+          month: 'short', 
+          day: 'numeric' 
+        })
+      };
+    }
+
+    function showLoading() {
+      document.getElementById('loading').style.display = 'block';
+    }
+
+    function hideLoading() {
+      document.getElementById('loading').style.display = 'none';
+    }
+
+    function formatTemperature(tempC, tempF, useCelsius) {
+      const temp = useCelsius ? tempC : tempF;
+      return `${Math.round(temp)}${useCelsius ? '°C' : '°F'}`;
+    }
+
+    function showAlert(message, duration = 10000) {
+      const alertBanner = document.getElementById('weatherAlert');
+      alertBanner.textContent = `⚠️ ${message}`;
+      alertBanner.style.display = 'block';
+      setTimeout(() => {
+        alertBanner.style.display = 'none';
+      }, duration);
+    }
+
+    function loadSavedLocations() {
+      return JSON.parse(localStorage.getItem('savedLocations')) || [];
+    }
+
+    function saveLocationsToStorage(locations) {
+      localStorage.setItem('savedLocations', JSON.stringify(locations));
+    }
+
+    function getTemperatureDescription(temp) {
+      if (temp < -5) return "Freezing cold";
+      if (temp < 0) return "Very cold";
+      if (temp < 10) return "Cold";
+      if (temp < 15) return "Cool";
+      if (temp < 20) return "Mild";
+      if (temp < 25) return "Warm";
+      if (temp < 30) return "Hot";
+      if (temp < 35) return "Very hot";
+      return "Extremely hot";
+    }
+
+    function getTemperatureColor(temp) {
+      return colorScale(temp);
+    }
+
+    // Map service functions
+    function initMap() {
+      mapboxgl.accessToken = CONFIG.MAPBOX_ACCESS_TOKEN;
+      map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/dark-v10',
+        center: CONFIG.DEFAULT_CENTER,
+        zoom: CONFIG.DEFAULT_ZOOM
+      });
+
+      // Add map controls
+      map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
+      map.addControl(new mapboxgl.FullscreenControl(), 'bottom-right');
+      map.addControl(new mapboxgl.GeolocateControl({
+        positionOptions: { enableHighAccuracy: true },
+        trackUserLocation: true,
+        showUserLocation: true
+      }), 'bottom-right');
+
+      // Initialize map event handlers
+      map.on('load', async () => {
+        await fetchCitiesInView();
+        await fetchForecastData();
+        initTimeline();
+        updateHeatmap(0);
+        updateWeatherDetails(0);
+        initHoverTemperature();
+        updateTemperatureOverlay();
+      });
+      
+      map.on('moveend', async () => {
+        await fetchCitiesInView();
+        await fetchForecastData();
+        initTimeline();
+        updateHeatmap(document.getElementById('forecastSlider').value);
+        updateTemperatureOverlay();
+      });
+
+      return map;
+    }
+
+    function updateTemperatureOverlay() {
+      const overlay = document.querySelector('.temperature-overlay');
+      if (!overlay || !forecastData || Object.keys(forecastData).length === 0) return;
+
+      // Calculate average temperature
+      let totalTemp = 0;
+      let count = 0;
+      for (const cityName in forecastData) {
+        totalTemp += forecastData[cityName][0].temp;
+        count++;
+      }
+      const avgTemp = totalTemp / count;
+
+      // Update overlay gradient based on average temperature
+      const color = getTemperatureColor(avgTemp);
+      const opacity = Math.min(Math.abs(avgTemp) / 40, 0.5); // Increase opacity with temperature extremes
+      
+      overlay.style.background = `linear-gradient(
+        45deg,
+        ${color}33,
+        ${color}66
+      )`;
+      overlay.style.opacity = opacity;
+    }
+
+    function updateHeatmap(dayIndex) {
+      if (!map.getSource('temperature-points') || Object.keys(forecastData).length === 0) return;
+      
+      const features = [];
+      for (const cityName in forecastData) {
+        const dayData = forecastData[cityName][dayIndex];
+        features.push({
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: [dayData.lon, dayData.lat]
+          },
+          properties: {
+            temperature: dayData.temp,
+            tempDisplay: useCelsius ? dayData.temp : dayData.temp_f,
+            name: dayData.name,
+            description: getTemperatureDescription(dayData.temp)
+          }
+        });
+      }
+
+      const geojson = {
+        type: "FeatureCollection",
+        features: features
+      };
+
+      if (map.getSource('temperature-points')) {
+        map.getSource('temperature-points').setData(geojson);
+        
+        map.setLayoutProperty('temperature-labels', 'text-field', 
+          ['concat', 
+            ['get', 'name'], '\n',
+            ['to-string', ['round', ['get', 'tempDisplay']]], 
+            useCelsius ? '°C' : '°F', '\n',
+            ['get', 'description']
+          ]
+        );
+      } else {
+        map.addSource('temperature-points', { type: 'geojson', data: geojson });
+        
+        // Add heatmap layer with enhanced colors
+        map.addLayer({
+          id: 'temperature-heat',
+          type: 'heatmap',
+          source: 'temperature-points',
+          maxzoom: 9,
+          paint: {
+            'heatmap-intensity': ['interpolate', ['linear'], ['zoom'], 0, 2, 9, 4],
+            'heatmap-color': [
+              'interpolate',
+              ['linear'],
+              ['heatmap-density'],
+              0, 'rgba(0, 0, 128, 0)',
+              0.1, getTemperatureColor(-10),
+              0.2, getTemperatureColor(0),
+              0.3, getTemperatureColor(5),
+              0.4, getTemperatureColor(10),
+              0.5, getTemperatureColor(15),
+              0.6, getTemperatureColor(20),
+              0.7, getTemperatureColor(25),
+              0.8, getTemperatureColor(30),
+              0.9, getTemperatureColor(35),
+              1, getTemperatureColor(40)
+            ],
+            'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 0, 15, 9, 40],
+            'heatmap-opacity': 0.8,
+            'heatmap-weight': [
+              'interpolate',
+              ['linear'],
+              ['get', 'temperature'],
+              -10, 0.2,
+              0, 0.4,
+              10, 0.6,
+              20, 0.8,
+              30, 1,
+              40, 1.2
+            ]
+          }
+        });
+
+        // Add circle layer with enhanced colors
+        map.addLayer({
+          id: 'temperature-circles',
+          type: 'circle',
+          source: 'temperature-points',
+          minzoom: 5,
+          paint: {
+            'circle-radius': [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              5, 8,
+              9, 15
+            ],
+            'circle-color': [
+              'interpolate',
+              ['linear'],
+              ['get', 'temperature'],
+              -10, getTemperatureColor(-10),
+              0, getTemperatureColor(0),
+              5, getTemperatureColor(5),
+              10, getTemperatureColor(10),
+              15, getTemperatureColor(15),
+              20, getTemperatureColor(20),
+              25, getTemperatureColor(25),
+              30, getTemperatureColor(30),
+              35, getTemperatureColor(35),
+              40, getTemperatureColor(40)
+            ],
+            'circle-opacity': 0.9,
+            'circle-stroke-color': 'white',
+            'circle-stroke-width': 1
+          }
+        });
+
+        // Add enhanced labels layer
+        map.addLayer({
+          id: 'temperature-labels',
+          type: 'symbol',
+          source: 'temperature-points',
+          layout: {
+            'text-field': [
+              'concat', 
+              ['get', 'name'], '\n',
+              ['to-string', ['round', ['get', 'tempDisplay']]], 
+              useCelsius ? '°C' : '°F', '\n',
+              ['get', 'description']
+            ],
+            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+            'text-size': 12,
+            'text-offset': [0, 1.5],
+            'text-anchor': 'top',
+            'text-max-width': 8
+          },
+          paint: {
+            'text-color': isDay ? '#000000' : '#FFFFFF',
+            'text-halo-color': isDay ? '#FFFFFF' : '#000000',
+            'text-halo-width': 1
+          }
+        });
+
+        addInteractivity();
+      }
+    }
+
+    function addInteractivity() {
+      map.off('mouseenter', 'temperature-circles');
+      map.off('mouseleave', 'temperature-circles');
+      map.off('click', 'temperature-circles');
+
+      map.on('mouseenter', 'temperature-circles', (e) => {
+        map.getCanvas().style.cursor = 'pointer';
+        
+        if (e.features.length > 0) {
+          const coordinates = e.features[0].geometry.coordinates.slice();
+          const temp = e.features[0].properties.temperature;
+          const tempDisplay = e.features[0].properties.tempDisplay;
+          const name = e.features[0].properties.name;
+          const description = e.features[0].properties.description;
+          
+          document.querySelectorAll('.mapboxgl-popup').forEach(popup => popup.remove());
+          
+          new mapboxgl.Popup()
+            .setLngLat(coordinates)
+            .setHTML(`
+              <div style="color: ${getTemperatureColor(temp)}; text-align: center;">
+                <strong>${name}</strong><br>
+                Temperature: ${Math.round(tempDisplay)}${useCelsius ? '°C' : '°F'}<br>
+                <span style="font-size: 0.9em;">${description}</span>
+              </div>
+            `)
+            .addTo(map);
+        }
+      });
+
+      map.on('mouseleave', 'temperature-circles', () => {
+        map.getCanvas().style.cursor = '';
+        document.querySelectorAll('.mapboxgl-popup').forEach(popup => popup.remove());
+      });
+
+      map.on('click', 'temperature-circles', (e) => {
+        if (e.features.length > 0) {
+          const coordinates = e.features[0].geometry.coordinates.slice();
+          const temp = e.features[0].properties.temperature;
+          const tempDisplay = e.features[0].properties.tempDisplay;
+          const name = e.features[0].properties.name;
+          const description = e.features[0].properties.description;
+          
+          new mapboxgl.Popup()
+            .setLngLat(coordinates)
+            .setHTML(`
+              <div style="color: ${getTemperatureColor(temp)}; text-align: center;">
+                <strong>${name}</strong><br>
+                Temperature: ${Math.round(tempDisplay)}${useCelsius ? '°C' : '°F'}<br>
+                <span style="font-size: 0.9em;">${description}</span>
+              </div>
+            `)
+            .addTo(map);
+        }
+      });
+    }
+
+    function initHoverTemperature() {
+      const hoverElement = document.getElementById('hoverTemperature');
+      
+      map.on('mousemove', async (e) => {
+        const { lng, lat } = e.lngLat;
+        
+        try {
+          const response = await fetch(
+            `${CONFIG.WEATHER_API_URL}/current.json?key=${CONFIG.WEATHER_API_KEY}&q=${lat},${lng}`
+          );
+          
+          if (response.ok) {
+            const data = await response.json();
+            const temp = useCelsius ? data.current.temp_c : data.current.temp_f;
+            const description = getTemperatureDescription(data.current.temp_c);
+            
+            hoverElement.innerHTML = `
+              <div style="color: ${getTemperatureColor(data.current.temp_c)}">
+                <strong>${data.location.name}</strong><br>
+                ${Math.round(temp)}${useCelsius ? '°C' : '°F'}<br>
+                <span style="font-size: 0.9em;">${description}</span>
+              </div>
+            `;
+            hoverElement.style.display = 'block';
+            hoverElement.style.left = `${e.point.x}px`;
+            hoverElement.style.top = `${e.point.y}px`;
+          }
+        } catch (error) {
+          console.error("Error fetching hover location data:", error);
+          hoverElement.style.display = 'none';
+        }
+      });
+      
+      map.on('mouseout', () => {
+        hoverElement.style.display = 'none';
+      });
+    }
+
+    function toggleDayNight() {
+      isDay = !isDay;
+      map.setStyle(isDay ? 'mapbox://styles/mapbox/light-v10' : 'mapbox://styles/mapbox/dark-v10');
+      
+      map.once('styledata', () => {
+        if (map.getLayer('temperature-labels')) {
+          map.setPaintProperty('temperature-labels', 'text-color', isDay ? '#000000' : '#FFFFFF');
+          map.setPaintProperty('temperature-labels', 'text-halo-color', isDay ? '#FFFFFF' : '#000000');
+        }
+      });
+      
+      return isDay;
+    }
+
+    function addMapMarker(lon, lat, popupContent) {
+      if (marker) marker.remove();
+      
+      marker = new mapboxgl.Marker()
+        .setLngLat([lon, lat])
+        .setPopup(new mapboxgl.Popup().setHTML(popupContent))
+        .addTo(map)
+        .togglePopup();
+      
+      return marker;
+    }
+
+    function flyToLocation(location) {
+      map.flyTo({
+        center: [location.lon, location.lat],
+        zoom: 9
+      });
+    }
+
+    function toggleLayer(layerName, isVisible) {
+      if (layerName === 'temperature') {
+        const visibility = isVisible ? 'visible' : 'none';
+        
+        if (map.getLayer('temperature-heat')) {
+          map.setLayoutProperty('temperature-heat', 'visibility', visibility);
+        }
+        
+        if (map.getLayer('temperature-circles')) {
+          map.setLayoutProperty('temperature-circles', 'visibility', visibility);
+        }
+        
+        if (map.getLayer('temperature-labels')) {
+          map.setLayoutProperty('temperature-labels', 'visibility', visibility);
+        }
+      }
+    }
+
+    // Weather service functions
+    async function fetchCitiesInView() {
+      const bounds = map.getBounds();
+      const center = map.getCenter();
+      
+      try {
+        // First get current location weather to set the marker
+        const currentWeather = await fetchCurrentWeather(center.lat, center.lng);
+        
+        // Then search for cities in the area
+        const response = await fetch(
+          `${CONFIG.WEATHER_API_URL}/search.json?key=${CONFIG.WEATHER_API_KEY}&q=${center.lat},${center.lng}`
+        );
+        
+        if (!response.ok) throw new Error('Failed to fetch cities');
+        const citiesData = await response.json();
+        
+        // Limit to 8 major cities for better visualization
+        cities = citiesData.slice(0, 8).map(city => ({
+          name: city.name,
+          lat: city.lat,
+          lon: city.lon
+        }));
+        
+        // Add current location if not already in the list
+        if (!cities.some(c => c.name === currentWeather.location.name)) {
+          cities.unshift({
+            name: currentWeather.location.name,
+            lat: currentWeather.location.lat,
+            lon: currentWeather.location.lon
+          });
+        }
+        
+        return cities;
+      } catch (error) {
+        console.error("Error fetching cities:", error);
+        // Fallback to default cities
+        cities = CONFIG.DEFAULT_CITIES;
+        return cities;
+      }
+    }
+
+    async function fetchCurrentWeather(lat, lon) {
+      try {
+        const response = await fetch(
+          `${CONFIG.WEATHER_API_URL}/current.json?key=${CONFIG.WEATHER_API_KEY}&q=${lat},${lon}`
+        );
+        if (!response.ok) throw new Error('Failed to fetch current weather');
+        return await response.json();
+      } catch (error) {
+        console.error("Error fetching current weather:", error);
+        throw error;
+      }
+    }
+
+    async function fetchForecastData() {
+      showLoading();
+      try {
+        forecastData = {}; // Clear previous data
+        
+        for (const city of cities) {
+          const response = await fetch(
+            `${CONFIG.WEATHER_API_URL}/forecast.json?key=${CONFIG.WEATHER_API_KEY}&q=${city.lat},${city.lon}&days=4&aqi=yes&alerts=yes`
+          );
+          if (!response.ok) throw new Error('Failed to fetch forecast data');
+          const data = await response.json();
+          
+          // Store current location info for the first city
+          if (city === cities[0]) {
+            currentLocation = data.location;
+            
+            // Check for alerts
+            if (data.alerts && data.alerts.alert && data.alerts.alert.length > 0) {
+              showAlert(data.alerts.alert[0].headline);
+            }
+            
+            // Store hourly forecast for first city
+            hourlyForecastData = data.forecast.forecastday[0].hour;
+          }
+          
+          const currentTemp = data.current.temp_c;
+          
+          forecastData[city.name] = data.forecast.forecastday.map((day, index) => ({
+            lat: city.lat,
+            lon: city.lon,
+            temp: index === 0 ? currentTemp : day.day.avgtemp_c,
+            temp_f: index === 0 ? data.current.temp_f : (day.day.avgtemp_c * 9/5) + 32,
+            date: day.date,
+            name: city.name,
+            condition: index === 0 ? data.current.condition.text : day.day.condition.text,
+            icon: index === 0 ? data.current.condition.icon : day.day.condition.icon,
+            feelslike: index === 0 ? data.current.feelslike_c : day.day.avgtemp_c,
+            feelslike_f: index === 0 ? data.current.feelslike_f : (day.day.avgtemp_c * 9/5) + 32,
+            humidity: index === 0 ? data.current.humidity : day.day.avghumidity,
+            wind_kph: index === 0 ? data.current.wind_kph : day.day.maxwind_kph,
+            wind_dir: index === 0 ? data.current.wind_dir : "N/A",
+            precip_mm: index === 0 ? data.current.precip_mm : day.day.totalprecip_mm,
+            uv: index === 0 ? data.current.uv : day.day.uv,
+            vis_km: index === 0 ? data.current.vis_km : day.day.avgvis_km,
+            pressure_mb: index === 0 ? data.current.pressure_mb : day.day.avgpressure_mb,
+            aqi: index === 0 && data.current.air_quality ? data.current.air_quality["us-epa-index"] : null
+          }));
+        }
+        
+        hideLoading();
+        return forecastData;
+      } catch (error) {
+        console.error("Error fetching forecast data:", error);
+        hideLoading();
+        throw error;
+      }
+    }
+
+    async function searchCityWeather(cityName) {
+      showLoading();
+      try {
+        // First search for the city to get coordinates
+        const searchResponse = await fetch(
+          `${CONFIG.WEATHER_API_URL}/search.json?key=${CONFIG.WEATHER_API_KEY}&q=${cityName}`
+        );
+        if (!searchResponse.ok) throw new Error('City not found');
+        const searchData = await searchResponse.json();
+        
+        if (searchData.length === 0) throw new Error('City not found');
+        
+        const firstResult = searchData[0];
+        const lat = firstResult.lat;
+        const lon = firstResult.lon;
+        
+        // Get current weather for the city
+        const weatherResponse = await fetch(
+          `${CONFIG.WEATHER_API_URL}/current.json?key=${CONFIG.WEATHER_API_KEY}&q=${lat},${lon}`
+        );
+        if (!weatherResponse.ok) throw new Error('Weather data not available');
+        const weatherData = await weatherResponse.json();
+        
+        // Update cities list to include this location
+        cities = [{
+          name: weatherData.location.name,
+          lat: weatherData.location.lat,
+          lon: weatherData.location.lon
+        }];
+        
+        hideLoading();
+        return {
+          location: {
+            name: weatherData.location.name,
+            lat: weatherData.location.lat,
+            lon: weatherData.location.lon
+          },
+          weather: weatherData
+        };
+      } catch (error) {
+        hideLoading();
+        throw error;
+      }
+    }
+
+    function getHourlyForecast() {
+      return hourlyForecastData;
+    }
+
+    function getCurrentLocation() {
+      return currentLocation;
+    }
+
+    function toggleTemperatureUnit() {
+      useCelsius = !useCelsius;
+      return useCelsius;
+    }
+
+    function getTemperatureUnit() {
+      return useCelsius;
+    }
+
+    // UI controller functions
+    function initUI() {
+      initLegend();
+      setupEventListeners();
+    }
+
+    function initLegend() {
+      const temperatures = [CONFIG.TEMP_MIN, 0, 10, 20, 30, CONFIG.TEMP_MAX];
+      
+      // Create gradient
+      const gradientColors = temperatures.map(t => colorScale(t));
+      const gradient = document.querySelector('.legend-gradient');
+      gradient.style.background = `linear-gradient(to right, ${gradientColors.join(', ')})`;
+      
+      // Add labels
+      const labels = document.querySelector('.legend-labels');
+      labels.innerHTML = temperatures.map(t => `<span>${t}</span>`).join('');
+    }
+
+    function initTimeline() {
+      const timeline = document.getElementById('timeline');
+      timeline.innerHTML = '';
+      
+      if (!forecastData || Object.keys(forecastData).length === 0 || !cities || cities.length === 0) {
+        return;
+      }
+      
+      const firstCity = cities[0].name;
+      
+      // Add "Now" element
+      const currentDay = document.createElement('div');
+      currentDay.className = 'timeline-day active';
+      currentDay.innerHTML = `
+        <div class="timeline-dayname">NOW</div>
+        <div class="timeline-date"></div>
+      `;
+      currentDay.onclick = () => showDay(0);
+      timeline.appendChild(currentDay);
+      
+      // Add forecast days
+      if (forecastData[firstCity]) {
+        forecastData[firstCity].forEach((day, index) => {
+          if (index === 0) return;
+          
+          const formattedDate = formatDate(day.date);
+          const dayElement = document.createElement('div');
+          dayElement.className = 'timeline-day';
+          dayElement.innerHTML = `
+            <div class="timeline-dayname">${formattedDate.dayName}</div>
+            <div class="timeline-date">${formattedDate.dayNumber}</div>
+          `;
+          dayElement.onclick = () => showDay(index);
+          timeline.appendChild(dayElement);
+        });
+      }
+      
+      updateTemperatureDisplay(0);
+    }
+
+    function showDay(dayIndex) {
+      const days = document.querySelectorAll('.timeline-day');
+      days.forEach((day, index) => {
+        day.classList.toggle('active', index === dayIndex);
+      });
+      
+      document.getElementById('forecastSlider').value = dayIndex;
+      updateTemperatureDisplay(dayIndex);
+      updateHeatmap(dayIndex);
+      updateWeatherDetails(dayIndex);
+    }
+
+    function updateTemperatureDisplay(dayIndex) {
+      const tempValue = document.querySelector('.temperature-value');
+      const tempTime = document.querySelector('.temperature-time');
+      
+      if (forecastData && Object.keys(forecastData).length > 0 && cities && cities.length > 0) {
+        const firstCity = cities[0].name;
+        
+        if (forecastData[firstCity] && forecastData[firstCity][dayIndex]) {
+          const dayData = forecastData[firstCity][dayIndex];
+          const temp = useCelsius ? dayData.temp : dayData.temp_f;
+          
+          tempValue.textContent = `${Math.round(temp)}${useCelsius ? '°C' : '°F'}`;
+          tempValue.style.color = colorScale(dayData.temp); // Always use Celsius for color scale
+          
+          if (dayIndex === 0) {
+            const now = new Date();
+            tempTime.textContent = now.toLocaleTimeString('en-US', { 
+              hour: '2-digit', 
+              minute: '2-digit',
+              hour12: true
+            });
+          } else {
+            const date = new Date(dayData.date);
+            tempTime.textContent = `${date.toLocaleDateString('en-US', { 
+              weekday: 'short', 
+              month: 'short', 
+              day: 'numeric'
+            })}, 3 PM`;
+          }
+        }
+      }
+    }
+
+    function updateWeatherDetails(dayIndex) {
+      if (!forecastData || Object.keys(forecastData).length === 0 || !cities || cities.length === 0) {
+        return;
+      }
+      
+      const firstCity = cities[0].name;
+      
+      if (forecastData[firstCity] && forecastData[firstCity][dayIndex]) {
+        const dayData = forecastData[firstCity][dayIndex];
+        
+        document.getElementById('feelsLike').textContent = 
+          `${Math.round(useCelsius ? dayData.feelslike : dayData.feelslike_f)}${useCelsius ? '°C' : '°F'}`;
+        document.getElementById('humidity').textContent = `${dayData.humidity}%`;
+        document.getElementById('wind').textContent = 
+          `${dayData.wind_kph} kph ${dayData.wind_dir}`;
+        document.getElementById('uvIndex').textContent = dayData.uv;
+        document.getElementById('visibility').textContent = `${dayData.vis_km} km`;
+        document.getElementById('pressure').textContent = `${dayData.pressure_mb} mb`;
+        
+        document.getElementById('weatherDetails').style.display = 'block';
+      }
+    }
+
+    function togglePlay() {
+      const btn = document.getElementById('playPauseBtn');
+      
+      if (!isPlaying) {
+        isPlaying = true;
+        btn.innerHTML = '⏸️';
+        playInterval = setInterval(() => {
+          const slider = document.getElementById('forecastSlider');
+          const newValue = (parseInt(slider.value) + 1) % 4;
+          slider.value = newValue;
+          showDay(newValue);
+        }, 2000);
+      } else {
+        isPlaying = false;
+        btn.innerHTML = '▶️';
+        clearInterval(playInterval);
+      }
+    }
+
+    function showHourlyForecast() {
+      const hourlyContainer = document.getElementById('hourlyForecast');
+      
+      if (hourlyContainer.style.display === 'block') {
+        hourlyContainer.style.display = 'none';
+        return;
+      }
+      
+      const hourlyData = getHourlyForecast();
+      if (!hourlyData) {
+        alert('Hourly data not available');
+        return;
+      }
+      
+      hourlyContainer.innerHTML = '';
+      
+      // Show next 12 hours
+      const now = new Date();
+      const currentHour = now.getHours();
+      
+      hourlyData.slice(currentHour, currentHour + 12).forEach(hour => {
+        const time = new Date(hour.time);
+        const hourElement = document.createElement('div');
+        hourElement.className = 'hourly-item';
+        
+        const temp = useCelsius ? hour.temp_c : hour.temp_f;
+        
+        hourElement.innerHTML = `
+          <div class="hourly-time">${time.getHours()}:00</div>
+          <img src="https:${hour.condition.icon}" alt="${hour.condition.text}" class="hourly-icon">
+          <div class="hourly-temp">${Math.round(temp)}${useCelsius ? '°C' : '°F'}</div>
+          <div>${hour.chance_of_rain}%</div>
+        `;
+        
+        hourlyContainer.appendChild(hourElement);
+      });
+      
+      hourlyContainer.style.display = 'block';
+    }
+
+    function toggleSavedLocations() {
+      const container = document.getElementById('savedLocations');
+      container.style.display = container.style.display === 'block' ? 'none' : 'block';
+      
+      if (container.style.display === 'block') {
+        renderSavedLocations();
+      }
+    }
+
+    function renderSavedLocations() {
+      const list = document.getElementById('savedLocationsList');
+      list.innerHTML = '';
+      
+      if (savedLocations.length === 0) {
+        list.innerHTML = '<p>No saved locations</p>';
+        return;
+      }
+      
+      savedLocations.forEach(loc => {
+        const item = document.createElement('div');
+        item.className = 'saved-location';
+        item.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${loc.name}`;
+        item.onclick = () => {
+          flyToLocation(loc);
+          document.getElementById('savedLocations').style.display = 'none';
+        };
+        list.appendChild(item);
+      });
+    }
+
+    function saveCurrentLocation() {
+      const location = getCurrentLocation();
+      if (!location) return;
+      
+      const exists = savedLocations.some(
+        loc => loc.name === location.name
+      );
+      
+      if (!exists) {
+        const newLocation = {
+          name: location.name,
+          lat: location.lat,
+          lon: location.lon
+        };
+        
+        savedLocations.push(newLocation);
+        saveLocationsToStorage(savedLocations);
+        renderSavedLocations();
+      }
+    }
+
+    async function searchCity() {
+      const cityName = document.getElementById('searchBox').value.trim();
+      if (!cityName) return;
+      
+      try {
+        const result = await searchCityWeather(cityName);
+        
+        // Fly to the location
+        flyToLocation(result.location);
+        
+        // Add marker with popup
+        const temp = useCelsius ? result.weather.current.temp_c : result.weather.current.temp_f;
+        
+        const popupContent = `
+          <div style="color: ${colorScale(result.weather.current.temp_c)}">
+            <strong>${result.location.name}</strong><br>
+            Temperature: ${Math.round(temp)}${useCelsius ? '°C' : '°F'}<br>
+            Condition: ${result.weather.current.condition.text}
+            <img src="https:${result.weather.current.condition.icon}" alt="${result.weather.current.condition.text}">
+          </div>
+        `;
+        
+        addMapMarker(result.location.lon, result.location.lat, popupContent);
+        
+        // Fetch forecast for this location
+        await fetchForecastData();
+        initTimeline();
+        updateHeatmap(0);
+        updateWeatherDetails(0);
+      } catch (error) {
+        alert(error.message || 'Failed to fetch city data');
+      }
+    }
+
+    function setupEventListeners() {
+      // Search event listeners
+      document.getElementById('searchBox').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          searchCity();
+        }
+      });
+      
+      document.getElementById('searchBtn').addEventListener('click', searchCity);
+      
+      // Forecast slider
+      document.getElementById('forecastSlider').addEventListener('input', function() {
+        const dayIndex = parseInt(this.value);
+        showDay(dayIndex);
+      });
+      
+      // Play/pause button
+      document.getElementById('playPauseBtn').addEventListener('click', togglePlay);
+      
+      // Day/night toggle
+      document.getElementById('dayNightToggle').addEventListener('click', () => {
+        const isDayMode = toggleDayNight();
+        document.getElementById('dayNightToggle').innerHTML = isDayMode ? '🌙' : '🌞';
+      });
+      
+      // Temperature unit toggle
+      document.getElementById('tempUnitToggle').addEventListener('click', () => {
+        const useCelsius = toggleTemperatureUnit();
+        document.getElementById('tempUnit').textContent = useCelsius ? '°C' : '°F';
+        updateHeatmap(document.getElementById('forecastSlider').value);
+        updateTemperatureDisplay(document.getElementById('forecastSlider').value);
+        updateWeatherDetails(document.getElementById('forecastSlider').value);
+      });
+      
+      // Layer toggles
+      document.getElementById('tempLayer').addEventListener('change', function() {
+        activeLayers.temperature = this.checked;
+        toggleLayer('temperature', this.checked);
+      });
+      
+      document.getElementById('precipLayer').addEventListener('change', function() {
+        activeLayers.precipitation = this.checked;
+        toggleLayer('precipitation', this.checked);
+      });
+      
+      document.getElementById('windLayer').addEventListener('change', function() {
+        activeLayers.wind = this.checked;
+        toggleLayer('wind', this.checked);
+      });
+      
+      document.getElementById('aqiLayer').addEventListener('change', function() {
+        activeLayers.aqi = this.checked;
+        toggleLayer('aqi', this.checked);
+      });
+      
+      // Hourly forecast button
+      document.getElementById('hourlyBtn').addEventListener('click', showHourlyForecast);
+      
+      // Saved locations
+      document.getElementById('savedLocationsBtn').addEventListener('click', toggleSavedLocations);
+      document.getElementById('saveLocationBtn').addEventListener('click', saveCurrentLocation);
+      
+      // Feedback modal
+      document.getElementById('feedbackBtn').addEventListener('click', () => {
+        document.getElementById('feedbackPopup').style.display = 'block';
+      });
+      
+      document.getElementById('closeFeedbackBtn').addEventListener('click', () => {
+        document.getElementById('feedbackPopup').style.display = 'none';
+      });
+      
+      document.getElementById('cancelFeedbackBtn').addEventListener('click', () => {
+        document.getElementById('feedbackPopup').style.display = 'none';
+      });
+      
+      document.getElementById('submitFeedbackBtn').addEventListener('click', () => {
+        const name = document.getElementById('fbName').value;
+        const email = document.getElementById('fbEmail').value;
+        const message = document.getElementById('fbMessage').value;
+
+        if (name && email && message) {
+          console.log("Feedback Submitted:", { name, email, message });
+          alert("Thank you for your feedback!");
+          document.getElementById('feedbackPopup').style.display = 'none';
+          document.getElementById('fbName').value = '';
+          document.getElementById('fbEmail').value = '';
+          document.getElementById('fbMessage').value = '';
+        } else {
+          alert("Please fill out all fields.");
+        }
+      });
+    }
+  </script>
+</body>
+</html>
