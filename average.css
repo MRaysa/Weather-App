@@ -1,7 +1,7 @@
 /* General Styles */
 body {
   font-family: 'Inter', sans-serif;
-  background: url('images/weather-background.jpg') no-repeat center center fixed;
+  /* background: url('images/weather-background.jpg') no-repeat center center fixed; */
   background-size: cover;
   color: #333;
   margin: 0;
@@ -10,7 +10,7 @@ body {
 
 /* Navbar Styles */
 .navbar {
-  background: rgba(17, 10, 218, 0.4);
+  background: rgba(87, 231, 224, 0.4);
   backdrop-filter: blur(10px);
   padding: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -39,7 +39,7 @@ body {
 .hamburger {
   display: none;
   font-size: 1.5rem;
-  color: #e0e3e7;
+  color: hsl(218, 100%, 2%);
   cursor: pointer;
 }
 
@@ -52,7 +52,7 @@ body {
 
 .nav-links a {
   text-decoration: none;
-  color: #e0e3e7;
+  color: #070708;
   font-size: 1rem;
   transition: color 0.3s ease;
 }
@@ -68,7 +68,7 @@ body {
   align-items: center;
   gap: 1rem;
 }
-
+/* 
 .search-bar {
   position: relative;
 }
@@ -101,7 +101,7 @@ body {
 
 .search-button:hover {
   background: #3182ce;
-}
+} */
 
 /* Main Content Styles */
 .main-content {
@@ -110,7 +110,7 @@ body {
 }
 
 .container {
-  background: rgba(196, 197, 227, 0.8);
+  background: rgba(187, 238, 240, 0.8);
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -177,7 +177,7 @@ button.active {
     display: flex;
   }
 }
-.back-button {
+/* .back-button {
   background: #4299e1;
   color: #fff;
   padding: 0.8rem 1.5rem;
@@ -198,4 +198,4 @@ button.active {
 .back-button:active {
   background: #2b6cb0;
   transform: translateY(1px);
-}
+} */
