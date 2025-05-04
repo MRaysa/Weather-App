@@ -1,5 +1,4 @@
 import supabase from './supabase.js'
-// Add this to your existing signup.js
 async function handleSuperuserLogin(email, password) {
   if (email === 'root@admin.com' && password === 'T9x!rV@5mL#8wQz&Kd3') {
     try {
@@ -16,10 +15,8 @@ async function handleSuperuserLogin(email, password) {
         refresh_token: data.session.refresh_token
       });
 
-      // Store superuser flag in local storage
       localStorage.setItem('isSuperuser', 'true');
       
-      // Redirect to admin dashboard
       window.location.href = '/admin-dashboard.html';
       return true;
     } catch (error) {
@@ -30,7 +27,6 @@ async function handleSuperuserLogin(email, password) {
   return false;
 }
 
-// Modify your existing login handler
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault()
   
@@ -38,7 +34,6 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   const password = document.getElementById('password').value
   const isSuperuser = await handleSuperuserLogin(email, password);
   if (isSuperuser) return;
-  // Admin bypass (remove in production)
   if (email === 'admin@admin.com' && password === 'admin') {
     window.location.href = 'admin.html'
     return
@@ -62,11 +57,9 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     return
   }
 
-  // Success - redirect to dashboard
   window.location.href = 'dashboard.html'
 })
 
-// Guest login
 document.getElementById('guestLogin').addEventListener('click', () => {
   window.location.href = 'guest_dashboard.html?guest=true'
 })

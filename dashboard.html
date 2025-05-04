@@ -21,7 +21,6 @@
         )
 
         document.addEventListener('DOMContentLoaded', async () => {
-            // Check auth status
             const { data: { user }, error } = await supabase.auth.getUser()
 
             if (error || !user) {
@@ -29,14 +28,12 @@
                 return
             }
 
-            // Load profile data
             await loadProfileData(user)
 
         })
 
         async function loadProfileData(user) {
 
-            // Set profile picture (if available)
             const profilePic = user.user_metadata?.avatar_url ||
                 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
 
@@ -651,7 +648,7 @@
 
     <script>
         // API Configuration
-        const API_KEY = "1dec1896e77e4da5b0c195326251603"; // Should be moved to environment variables in production
+        const API_KEY = "1dec1896e77e4da5b0c195326251603"; 
         const BASE_URL = "https://api.weatherapi.com/v1";
 
         // DOM Elements
@@ -670,7 +667,6 @@
         const locationHeader = document.getElementById("location-header");
         const currentDateTime = document.getElementById("current-date-time");
 
-        // Weather Icon Mapping (simplified)
         const weatherIcons = {
             1000: "sunny.png", // Clear
             1003: "PartlyCloudy.png", // Partly cloudy
@@ -882,7 +878,7 @@
 
         function updateHourlyForecast(data) {
             const todayHours = data.forecast.forecastday[0].hour;
-            const tomorrowHours = data.forecast.forecastday[1]?.hour || []; // Get next day's hours if available
+            const tomorrowHours = data.forecast.forecastday[1]?.hour || [];
             const now = new Date();
             const currentHour = now.getHours();
 
@@ -895,7 +891,7 @@
 
             // Show next 12 hours of forecast (or as many as available)
             hourlyForecast.innerHTML = nextHours
-                .slice(0, 12) // Ensure we never show more than 12
+                .slice(0, 12) 
                 .map((hour) => {
                     const hourTime = new Date(hour.time);
                     const displayTime = hourTime.toLocaleTimeString('en-US', { hour: 'numeric', hour12: true });

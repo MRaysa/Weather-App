@@ -1,10 +1,8 @@
-// Initialize Supabase (no authentication needed)
 const supabase = window.supabase.createClient(
   'https://wyicgttorbmwngjmtsnu.supabase.co', 
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5aWNndHRvcmJtd25nam10c251Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU2NjA2NTksImV4cCI6MjA2MTIzNjY1OX0.2303RI9npdrVAQ2xLgg1Q7pLSIlDQXfxhUqdkpnmaj8'
 );
 
-// DOM Elements
 const usersTableBody = document.getElementById('usersTableBody');
 const totalUsersEl = document.getElementById('totalUsers');
 const activeUsersEl = document.getElementById('activeUsers');
@@ -12,12 +10,10 @@ const newUsersEl = document.getElementById('newUsers');
 const searchInput = document.getElementById('searchInput');
 const refreshBtn = document.getElementById('refreshBtn');
 
-// Main data loading function
 async function loadData() {
   try {
     showLoadingState();
     
-    // Fetch users without any authentication
     const { data: users, error } = await supabase
       .from('profiles')
       .select('*')
@@ -34,7 +30,6 @@ async function loadData() {
   }
 }
 
-// Render users to the table
 function renderUsers(users) {
   if (!users || users.length === 0) {
     usersTableBody.innerHTML = `
@@ -61,7 +56,6 @@ function renderUsers(users) {
   `).join('');
 }
 
-// Update statistics cards
 function updateStats(users) {
   if (!users) return;
   
@@ -78,7 +72,6 @@ function updateStats(users) {
   activeUsersEl.textContent = 'N/A';
 }
 
-// Helper functions
 function showLoadingState() {
   usersTableBody.innerHTML = `
     <tr>
@@ -113,7 +106,6 @@ function formatDate(dateString) {
   return date.toLocaleDateString();
 }
 
-// View user details (simple alert for demo)
 function viewUser(userId) {
   const user = allUsers.find(u => u.id === userId);
   if (user) {
@@ -121,7 +113,6 @@ function viewUser(userId) {
   }
 }
 
-// Event Listeners
 document.addEventListener('DOMContentLoaded', loadData);
 refreshBtn.addEventListener('click', loadData);
 searchInput.addEventListener('input', () => {
@@ -134,7 +125,6 @@ searchInput.addEventListener('input', () => {
   });
 });
 
-// Remove logout functionality since we're not authenticating
 document.getElementById('logout').addEventListener('click', (e) => {
   e.preventDefault();
   window.location.href = 'index.html';
