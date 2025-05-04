@@ -8,36 +8,67 @@
 </head>
 <body class="bg-gray-100 font-sans">
 
+  <!-- Navbar -->
+  <header class="bg-white shadow">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <h1 class="text-xl font-bold text-blue-600">⛈️ CloudScape</h1>
+      <nav class="space-x-4">
+        <a href="../test_superUser.html"
+           class="text-blue-600 hover:text-blue-800 hover:text-blue-600 transition-colors duration-200 font-medium">
+          Home
+        </a>
+        <a href="./moonsClouds.html"
+           class="text-blue-600 hover:text-blue-800 hover:text-blue-600 transition-colors duration-200 font-medium">
+          Weather
+        </a>
+        <a href="./moonsClouds.html"
+           class="text-blue-600 hover:text-blue-800 hover:text-blue-600 transition-colors duration-200 font-medium">
+          Map
+        </a>
+      </nav>
+    </div>
+  </header>
+  
+
+  
+
   <div class="max-w-6xl mx-auto p-6 grid md:grid-cols-2 gap-6">
     
     <!-- Left Panel: Profile -->
     <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
-      <img src="https://via.placeholder.com/150" alt="Your Photo" class="mx-auto rounded-full w-32 h-32 object-cover">
-      <h2 class="text-2xl font-bold mt-4">Your Name</h2>
-      <p class="text-gray-500">ID: 1234567</p>
+      <img src="https://avatars.githubusercontent.com/u/164731363?v=4&size=64" alt="Your Photo" class="mx-auto rounded-full w-32 h-32 object-cover">
+
+      <h2 class="text-2xl font-bold mt-4">Masum Anjum Moon</h2>
       
       <div class="mt-6 text-left space-y-3">
-        <p><strong>📄 Notion Page:</strong> <a href="#" class="text-blue-600 hover:underline">https://notion.so/your-name</a></p>
-        <p><strong>👥 Group Page:</strong> <a href="#" class="text-blue-600 hover:underline">https://notion.so/your-group</a></p>
-        <p><strong>💻 GitHub:</strong> <a href="#" class="text-blue-600 hover:underline">@yourgithub</a></p>
+        <p><strong>📄 ID :</strong> <a class="text-blue-600 hover:underline">2030583</a></p>
+        <p><strong>📄 Role :</strong> <a class="text-blue-600 hover:underline">Developer</a></p>
+        <p><strong>📄 Personal Notion Page :</strong> <a href="https://www.notion.so/Masum-Anjum-Moon-1ab50fefea5e80449e7dcb5377c2f27c" class="text-blue-600 hover:underline">Notion_Masum</a></p>
+        <p><strong>👥 Group Notion Page :</strong> <a href="https://www.notion.so/4-1930c4a3a7b380abb898e2f155d0020b" class="text-blue-600 hover:underline">Notion_WeatherApp</p>
+        <p><strong class=" text-gray-900">💻 GitHub Profile :</strong> <a href="https://github.com/Masum0308" class="text-blue-600 hover:underline">Masum_Github</a></p>
         <p><a href="../test_superUser.html" class="text-purple-600 font-semibold hover:underline">🏠 Home</a></p>
       </div>
     </div>
 
     <!-- Right Panel: Project Info -->
     <div class="bg-white rounded-2xl shadow-lg p-6">
-      <h3 class="text-2xl font-bold text-blue-600 mb-2">Your Project Title</h3>
-      <p class="text-gray-700 mb-4">
-        Brief description of your project. Explain what it does, what data it uses, or how it works in simple terms.
-      </p>
+      <h3 class="text-2xl font-bold text-blue-600 mb-2">Project Title :</h3>
+      <h3 class="text-2xl font-bold text-black-600 mb-2">  Live Weather Visualization Dashboard</h3>
+      
+      <h3 class="text-2xl font-bold text-blue-600 mb-2">Discription :</h3>
+<p class="text-gray-700 mb-4">
+  
+  This project is an interactive web application that visualizes current weather conditions across major cities in Asia. It integrates the OpenWeatherMap API with Mapbox to display a dynamic map where each city is marked with a colored circle based on its weather condition. Users can hover over or click on markers to view temperature and weather details, and refresh the data in real time. The application is fully responsive and includes features such as a legend, zoom-level scaling, and error handling for API issues.
+</p>
+
 
       <div class="mb-4">
-        <h4 class="font-semibold text-gray-800">🔗 GitHub Repository:</h4>
-        <a href="#" class="text-blue-600 hover:underline">https://github.com/youruser/your-repo</a>
+        <h4 class="font-semibold text-2xl text-blue-600">🔗 GitHub Repository:</h4>
+        <a href="https://github.com/MRaysa/Weather-App.git" class="text-black-600 hover:underline">Github_WeatherApp_repository</a>
       </div>
 
       <div class="mb-4">
-        <h4 class="font-semibold text-gray-800">🛠 Technologies Used:</h4>
+        <h4 class="font-semibold text-2xl text-blue-600">🛠 Technologies Used:</h4>
         <div class="flex flex-wrap gap-2 mt-2">
           <span class="bg-gray-200 px-2 py-1 rounded text-sm">HTML</span>
           <span class="bg-gray-200 px-2 py-1 rounded text-sm">CSS</span>
@@ -49,17 +80,67 @@
       </div>
 
       <div>
-        <h4 class="font-semibold text-gray-800">✨ Project Features:</h4>
+        <h4 class="font-semibold text-2xl text-blue-600">✨ Project Features:</h4>
         <ul class="list-disc list-inside text-gray-700 mt-2 space-y-1">
-          <li>Real-time data visualization</li>
-          <li>Interactive maps and charts</li>
-          <li>Mobile responsive design</li>
+          <li>Interactive Map Interface</li>
+          <li>Real-Time Weather Visualization</li>
+          <li>Color-Coded Weather Legend</li>
+          <li>Manual Weather Refresh</li>
+          <li>Animated Loading Spinner</li>
+          <li>Smart Error Handling</li>
+          <li>Responsive design</li>
           <li>Customizable UI</li>
         </ul>
       </div>
     </div>
 
   </div>
+    <!-- Footer -->
+    <footer class="footer pt-16 pb-8 bg-gray-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex flex-col items-center text-center">
+              <div class="mb-8">
+                  <div class="flex items-center justify-center mb-4">
+                      <span class="text-2xl font-bold gradient-text flex items-center text-blue-600">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
+                              stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                          </svg>
+                          WeatherScape
+                      </span>
+                  </div>
+                  <p class="text-gray-600 mb-6 max-w-md mx-auto">
+                      Advanced meteorological platform providing real-time weather data and visualization tools.
+                  </p>
+                  <div class="flex justify-center space-x-4 mb-8">
+                      <a href="#" class="text-gray-500 hover:text-blue-500 transition-colors">
+                          <i class="fab fa-twitter text-xl"></i>
+                      </a>
+                      <a href="#"
+                          class="text-gray-500 hover:text-blue-600 transition-colors">
+                          <i class="fab fa-facebook text-xl"></i>
+                      </a>
+
+                      <a href="https://https://github.com/Masum0308" class="text-gray-500 hover:text-gray-800 transition-colors">
+                          <i class="fab fa-github text-xl"></i>
+                      </a>
+                  </div>
+              </div>
+              <div class="footer-bottom pt-8 mt-8 border-t border-gray-200 w-full">
+                  <div class="flex flex-col items-center space-y-2">
+                      <p class="text-gray-500 text-sm">
+                          &copy; 2025 CloudScape. All rights reserved.
+                      </p>
+                      <p class="text-gray-500 text-sm">
+                          Developed by <span class="text-gray-700 font-medium">Masum Anjum Moon</span>
+                      </p>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </footer>
+  
 
 </body>
 </html>
