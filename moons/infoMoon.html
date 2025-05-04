@@ -2,145 +2,118 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your Info Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CloudScape Info</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
-<body class="bg-gray-100 font-sans">
+<body class="bg-gray-100 font-sans text-gray-800">
 
   <!-- Navbar -->
   <header class="bg-white shadow">
     <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-      <h1 class="text-xl font-bold text-blue-600">⛈️ CloudScape</h1>
-      <nav class="space-x-4">
-        <a href="../test_superUser.html"
-           class="text-blue-600 hover:text-blue-800 hover:text-blue-600 transition-colors duration-200 font-medium">
-          Home
-        </a>
-        <a href="./moonsClouds.html"
-           class="text-blue-600 hover:text-blue-800 hover:text-blue-600 transition-colors duration-200 font-medium">
-          Weather
-        </a>
-        <a href="./moonsClouds.html"
-           class="text-blue-600 hover:text-blue-800 hover:text-blue-600 transition-colors duration-200 font-medium">
-          Map
-        </a>
+      <div class="flex items-center space-x-2">
+        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 15a4 4 0 008 0 4 4 0 007 0 4 4 0 100-8 4 4 0 00-7 0 4 4 0 00-8 0 4 4 0 000 8z" />
+        </svg>
+        <h1 class="text-xl font-bold text-blue-600">CloudScape</h1>
+      </div>
+      <nav class="space-x-6">
+        <a href="../test_superUser.html" class="text-blue-600 hover:text-blue-800 font-medium transition">Home</a>
+        <a href="./moonsClouds.html" class="text-blue-600 hover:text-blue-800 font-medium transition">Weather</a>
+        <a href="./moonsClouds.html" class="text-blue-600 hover:text-blue-800 font-medium transition">Map</a>
       </nav>
     </div>
   </header>
-  
 
-  
+  <!-- Main Content -->
+  <main class="max-w-6xl mx-auto p-6 grid md:grid-cols-2 gap-6">
 
-  <div class="max-w-6xl mx-auto p-6 grid md:grid-cols-2 gap-6">
-    
-    <!-- Left Panel: Profile -->
-    <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
-      <img src="https://avatars.githubusercontent.com/u/164731363?v=4&size=64" alt="Your Photo" class="mx-auto rounded-full w-32 h-32 object-cover">
-
+    <!-- Profile Card -->
+    <section class="bg-white rounded-2xl shadow-lg p-6 text-center">
+      <h1 class="text-2xl font-bold text-blue-600">Personal Information</h1>
+      <p class="p-4">All relevant details about the project and developer<p>
+      <img src="https://avatars.githubusercontent.com/u/164731363?v=4&size=64" alt="Profile Photo"
+        class="mx-auto rounded-full w-32 h-32 object-cover border-4 border-blue-200" />
       <h2 class="text-2xl font-bold mt-4">Masum Anjum Moon</h2>
-      
-      <div class="mt-6 text-left space-y-3">
-        <p><strong>📄 ID :</strong> <a class="text-blue-600 hover:underline">2030583</a></p>
-        <p><strong>📄 Role :</strong> <a class="text-blue-600 hover:underline">Developer</a></p>
-        <p><strong>📄 Personal Notion Page :</strong> <a href="https://www.notion.so/Masum-Anjum-Moon-1ab50fefea5e80449e7dcb5377c2f27c" class="text-blue-600 hover:underline">Notion_Masum</a></p>
-        <p><strong>👥 Group Notion Page :</strong> <a href="https://www.notion.so/4-1930c4a3a7b380abb898e2f155d0020b" class="text-blue-600 hover:underline">Notion_WeatherApp</p>
-        <p><strong class=" text-gray-900">💻 GitHub Profile :</strong> <a href="https://github.com/Masum0308" class="text-blue-600 hover:underline">Masum_Github</a></p>
-        <p><a href="../test_superUser.html" class="text-purple-600 font-semibold hover:underline">🏠 Home</a></p>
+      <div class="mt-6 text-left space-y-3 text-sm md:text-base">
+        <p><strong>ID:</strong> <span class="text-blue-600">2030583</span></p>
+        <p><strong>Role:</strong> <span class="text-blue-600">Developer</span></p>
+        <p><strong>Personal Notion:</strong>
+          <a href="https://www.notion.so/Masum-Anjum-Moon-1ab50fefea5e80449e7dcb5377c2f27c" class="text-blue-600 hover:underline">Notion_Masum</a>
+        </p>
+        <p><strong>Group Notion:</strong>
+          <a href="https://www.notion.so/4-1930c4a3a7b380abb898e2f155d0020b" class="text-blue-600 hover:underline">Notion_WeatherApp</a>
+        </p>
+        <p><strong>GitHub:</strong>
+          <a href="https://github.com/Masum0308" class="text-blue-600 hover:underline">Masum_Github</a>
+        </p>
+        <p><strong>Project Repo:</strong>
+          <a href="https://github.com/MRaysa/Weather-App.git" class="text-blue-600 hover:underline">Weather-App Repository</a>
+        </p>
       </div>
-    </div>
+    </section>
 
-    <!-- Right Panel: Project Info -->
-    <div class="bg-white rounded-2xl shadow-lg p-6">
-      <h3 class="text-2xl font-bold text-blue-600 mb-2">Project Title :</h3>
-      <h3 class="text-2xl font-bold text-black-600 mb-2">  Live Weather Visualization Dashboard</h3>
+    <!-- Project Info Card -->
+    <section class="bg-white rounded-2xl shadow-lg p-6">
+      <h3 class="text-2xl font-bold text-blue-600 mb-2">Project Title:</h3>
+      <h4 class="text-xl font-semibold text-gray-800 mb-4">Live Weather Visualization Dashboard</h4>
+
+      <h3 class="text-2xl font-bold text-blue-600 mb-2">Description:</h3>
+      <p class="text-gray-700 mb-4 text-justify">
+        This project is an interactive web application that visualizes current weather conditions across major cities in Asia. It integrates the OpenWeatherMap API with Mapbox to display a dynamic map where each city is marked with a colored circle based on its weather condition. Users can hover over or click markers to view temperature, cloud coverage, and other weather details, with real-time data refresh. The application is fully responsive and includes features such as a legend, zoom scaling, and error handling.
+      </p>
       
-      <h3 class="text-2xl font-bold text-blue-600 mb-2">Discription :</h3>
-<p class="text-gray-700 mb-4">
-  
-  This project is an interactive web application that visualizes current weather conditions across major cities in Asia. It integrates the OpenWeatherMap API with Mapbox to display a dynamic map where each city is marked with a colored circle based on its weather condition. Users can hover over or click on markers to view temperature and weather details, and refresh the data in real time. The application is fully responsive and includes features such as a legend, zoom-level scaling, and error handling for API issues.
-</p>
-
 
       <div class="mb-4">
-        <h4 class="font-semibold text-2xl text-blue-600">🔗 GitHub Repository:</h4>
-        <a href="https://github.com/MRaysa/Weather-App.git" class="text-black-600 hover:underline">Github_WeatherApp_repository</a>
+        <h4 class="font-semibold text-xl text-blue-600">GitHub Repository:</h4>
+        <a href="https://github.com/MRaysa/Weather-App.git" class="text-blue-600 hover:underline">View Repository</a>
       </div>
 
       <div class="mb-4">
-        <h4 class="font-semibold text-2xl text-blue-600">🛠 Technologies Used:</h4>
+        <h4 class="font-semibold text-xl text-blue-600">Technologies Used:</h4>
         <div class="flex flex-wrap gap-2 mt-2">
           <span class="bg-gray-200 px-2 py-1 rounded text-sm">HTML</span>
           <span class="bg-gray-200 px-2 py-1 rounded text-sm">CSS</span>
           <span class="bg-gray-200 px-2 py-1 rounded text-sm">JavaScript</span>
           <span class="bg-gray-200 px-2 py-1 rounded text-sm">Mapbox</span>
-          <span class="bg-gray-200 px-2 py-1 rounded text-sm">OpenWeatherAPI</span>
+          <span class="bg-gray-200 px-2 py-1 rounded text-sm">OpenWeatherMap</span>
           <span class="bg-gray-200 px-2 py-1 rounded text-sm">D3.js</span>
         </div>
       </div>
 
       <div>
-        <h4 class="font-semibold text-2xl text-blue-600">✨ Project Features:</h4>
-        <ul class="list-disc list-inside text-gray-700 mt-2 space-y-1">
-          <li>Interactive Map Interface</li>
-          <li>Real-Time Weather Visualization</li>
-          <li>Color-Coded Weather Legend</li>
-          <li>Manual Weather Refresh</li>
-          <li>Animated Loading Spinner</li>
-          <li>Smart Error Handling</li>
-          <li>Responsive design</li>
-          <li>Customizable UI</li>
-        </ul>
+        <h4 class="font-semibold text-xl text-blue-600">Last Updated:</h4>
+        <p class="text-gray-800">May 4, 2025</p>
       </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t mt-10 py-8">
+    <div class="max-w-6xl mx-auto text-center space-y-4">
+      <div class="flex justify-center items-center space-x-2 text-blue-600 font-bold text-xl">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 15a4 4 0 008 0 4 4 0 007 0 4 4 0 100-8 4 4 0 00-7 0 4 4 0 00-8 0 4 4 0 000 8z" />
+        </svg>
+        <span>WeatherScape</span>
+      </div>
+      <p class="text-gray-600 max-w-md mx-auto">
+        Advanced meteorological platform offering real-time weather data and interactive visual tools.
+      </p>
+      <div class="flex justify-center space-x-4 text-gray-500 text-xl">
+        <a href="#" class="hover:text-blue-500"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="hover:text-blue-600"><i class="fab fa-facebook"></i></a>
+        <a href="https://github.com/Masum0308" class="hover:text-gray-800"><i class="fab fa-github"></i></a>
+      </div>
+      <p class="text-sm text-gray-500">&copy; 2025 CloudScape. All rights reserved.</p>
+      <p class="text-sm text-gray-500">Developed by <span class="font-medium text-gray-700">Masum Anjum Moon</span></p>
     </div>
-
-  </div>
-    <!-- Footer -->
-    <footer class="footer pt-16 pb-8 bg-gray-50">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="flex flex-col items-center text-center">
-              <div class="mb-8">
-                  <div class="flex items-center justify-center mb-4">
-                      <span class="text-2xl font-bold gradient-text flex items-center text-blue-600">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
-                              stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
-                          </svg>
-                          WeatherScape
-                      </span>
-                  </div>
-                  <p class="text-gray-600 mb-6 max-w-md mx-auto">
-                      Advanced meteorological platform providing real-time weather data and visualization tools.
-                  </p>
-                  <div class="flex justify-center space-x-4 mb-8">
-                      <a href="#" class="text-gray-500 hover:text-blue-500 transition-colors">
-                          <i class="fab fa-twitter text-xl"></i>
-                      </a>
-                      <a href="#"
-                          class="text-gray-500 hover:text-blue-600 transition-colors">
-                          <i class="fab fa-facebook text-xl"></i>
-                      </a>
-
-                      <a href="https://https://github.com/Masum0308" class="text-gray-500 hover:text-gray-800 transition-colors">
-                          <i class="fab fa-github text-xl"></i>
-                      </a>
-                  </div>
-              </div>
-              <div class="footer-bottom pt-8 mt-8 border-t border-gray-200 w-full">
-                  <div class="flex flex-col items-center space-y-2">
-                      <p class="text-gray-500 text-sm">
-                          &copy; 2025 CloudScape. All rights reserved.
-                      </p>
-                      <p class="text-gray-500 text-sm">
-                          Developed by <span class="text-gray-700 font-medium">Masum Anjum Moon</span>
-                      </p>
-                  </div>
-              </div>
-          </div>
-      </div>
   </footer>
-  
 
 </body>
 </html>
